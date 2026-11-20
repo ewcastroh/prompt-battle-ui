@@ -1,0 +1,97 @@
+{
+  "app": {
+    "brand": "prompt-battle",
+    "eventTitle": "Prompt Battle: Compile Your Imagination!"
+  },
+  "boot": {
+    "title": "We couldn't load Prompt Battle",
+    "message": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "settings": {
+    "open": "Open settings",
+    "title": "Settings",
+    "language": "Language",
+    "languageCode": {
+      "es": "ES",
+      "en": "EN"
+    },
+    "languageName": {
+      "es": "Español",
+      "en": "English"
+    },
+    "theme": "Theme",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
+  "shell": {
+    "statusLanguage": "lang: {{lang}}",
+    "statusTheme": {
+      "lightSystem": "theme: light (device)",
+      "lightOverride": "theme: light (chosen)",
+      "darkSystem": "theme: dark (device)",
+      "darkOverride": "theme: dark (chosen)"
+    }
+  },
+  "landing": {
+    "heading": "Cities",
+    "intro": "Players arrive with their city's QR code. This page is for testing.",
+    "play": "Play",
+    "stage": "Stage",
+    "admin": "Admin",
+    "loading": "Loading cities…"
+  },
+  "player": {
+    "title": "Play",
+    "heading": "Player screen",
+    "placeholder": "This is where you'll write your prompt and see your images. Coming soon."
+  },
+  "stage": {
+    "title": "Stage",
+    "placeholder": "The projector view is coming soon."
+  },
+  "admin": {
+    "title": "Admin",
+    "heading": "Admin console",
+    "placeholder": "This is where you'll control your city's rounds. Coming soon."
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "backHome": "See the cities"
+  },
+  "errors": {
+    "NICKNAME_INVALID": "Your nickname must be {{min}}–{{max}} characters: letters, digits, spaces, _ or -.",
+    "NICKNAME_TAKEN": "That nickname is already taken in your city. Try another one.",
+    "NICKNAME_BLOCKED": "That nickname isn't allowed at this event. Pick another one.",
+    "CITY_NOT_FOUND": "We couldn't find the city “{{city}}”. Check the link or scan the QR code again.",
+    "UNAUTHORIZED": "Your session is no longer valid. Please join again.",
+    "PLAYER_KICKED": "An admin removed you from the game.",
+    "ROUND_NOT_OPEN": "The round isn't open right now.",
+    "GENERATION_IN_FLIGHT": "Wait for your current image to finish before generating another one.",
+    "NO_ATTEMPTS_LEFT": "You've used all {{max}} attempts for this round.",
+    "PROMPT_INVALID": "Your prompt must be {{min}}–{{max}} characters.",
+    "PROMPT_BLOCKED": "That prompt isn't allowed at this event. Try another idea.",
+    "ATTEMPT_NOT_FOUND": "We couldn't find that attempt.",
+    "ATTEMPT_NOT_SELECTABLE": "You can only submit a finished image from the open round.",
+    "GENERATION_FAILED": "We couldn't generate the image. Try again.",
+    "INVALID_TRANSITION": "That action isn't available in the current phase.",
+    "ROUND_LOCKED": "This round has already started in a city and can't be changed.",
+    "RATE_LIMITED": "You're going too fast. Wait {{retryAfterSec}} s and try again.",
+    "ADMIN_FORBIDDEN": "That belongs to another city.",
+    "RESET_NOT_CONFIRMED": "Type RESET to confirm the reset.",
+    "INTERNAL_ERROR": "Something went wrong on the server. Try again in a moment.",
+    "ROUND_NOT_FOUND": "We couldn't find that round.",
+    "PLAYER_NOT_FOUND": "We couldn't find that player.",
+    "ENTRY_NOT_FOUND": "We couldn't find that entry.",
+    "PREVIEW_NOT_FOUND": "That preview no longer exists. Generate a new one.",
+    "PROVIDER_NOT_FOUND": "Provider “{{providerId}}” doesn't exist or has no key.",
+    "PROVIDER_UNAVAILABLE": "No image provider is available right now. Try again in a moment.",
+    "ROUND_NOT_READY": "This round's calibration isn't ready yet.",
+    "UPLOAD_INVALID": "Upload a JPEG, PNG or WebP image up to {{maxMb}} MB.",
+    "VALIDATION_FAILED": "Check the “{{field}}” field.",
+    "SCORING_FAILED": "You can only rescore a round whose scoring failed.",
+    "NOT_FOUND": "We couldn't find this page.",
+    "NETWORK_ERROR": "Can't reach the server. Check your connection and try again.",
+    "UNKNOWN": "Something went wrong. Try again."
+  }
+}

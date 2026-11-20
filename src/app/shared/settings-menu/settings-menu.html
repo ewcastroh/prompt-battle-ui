@@ -1,0 +1,64 @@
+<button
+  #trigger
+  type="button"
+  class="trigger"
+  [attr.popovertarget]="fallback ? null : panelId"
+  [attr.aria-expanded]="fallback ? fallbackOpen() : null"
+  [attr.aria-controls]="fallback ? panelId : null"
+  (click)="onTriggerClick()"
+>
+  <pb-icon name="settings" />
+  <span class="visually-hidden">{{ 'settings.open' | transloco }}</span>
+</button>
+
+<div
+  popover
+  role="group"
+  class="panel"
+  [id]="panelId"
+  [class.no-popover]="fallback"
+  [hidden]="panelHidden()"
+  [attr.aria-labelledby]="uid + '-title'"
+  (keydown)="onPanelKeydown($event)"
+>
+  <p class="title" [id]="uid + '-title'">{{ 'settings.title' | transloco }}</p>
+
+  <fieldset class="row">
+    <legend class="label">{{ 'settings.language' | transloco }}</legend>
+    <div class="segmented">
+      @for (lang of languages; track lang) {
+        <label class="segment" [attr.lang]="localeTags[lang]">
+          <input
+            type="radio"
+            class="segment-input"
+            [name]="uid + '-lang'"
+            [value]="lang"
+            [checked]="lang === language()"
+            (change)="setLanguage(lang)"
+          />
+          <span aria-hidden="true">{{ 'settings.languageCode.' + lang | transloco }}</span>
+          <span class="visually-hidden">{{ 'settings.languageName.' + lang | transloco }}</span>
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <div class="row">
+    <span class="label" [id]="uid + '-theme'">{{ 'settings.theme' | transloco }}</span>
+    <button
+      type="button"
+      class="theme-toggle"
+      [attr.aria-describedby]="uid + '-theme'"
+      (click)="theme.toggle()"
+    >
+      <span class="theme-if-light theme-option">
+        <pb-icon name="moon" />
+        <span class="visually-hidden">{{ 'settings.switchToDark' | transloco }}</span>
+      </span>
+      <span class="theme-if-dark theme-option">
+        <pb-icon name="sun" />
+        <span class="visually-hidden">{{ 'settings.switchToLight' | transloco }}</span>
+      </span>
+    </button>
+  </div>
+</div>

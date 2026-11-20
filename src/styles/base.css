@@ -1,0 +1,79 @@
+/* Element defaults built from tokens. Never set font-size on :root/html (respect OS text scale). */
+
+:root {
+  accent-color: var(--color-accent);
+  /* Never transition scrollbar-color (WebKit flicker). */
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+}
+
+body {
+  min-block-size: 100dvh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size-adjust: from-font;
+  line-height: 1.5;
+  text-align: start;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  line-height: 1.2;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  font-size: var(--text-xl);
+}
+
+h2 {
+  font-size: var(--text-lg);
+}
+
+p {
+  max-inline-size: 60ch;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.15em;
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+/* Static page rendered by main.ts when bootstrap fails (no Angular, no component styles). */
+.boot-error {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+.boot-error button {
+  min-block-size: var(--tap-target);
+  padding-inline: var(--space-6);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: 700;
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 2px;
+}

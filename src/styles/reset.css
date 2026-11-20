@@ -1,0 +1,77 @@
+/* Minimal, element-scoped reset. No rules on `*` (they can't be overridden by lower layers). */
+
+:where(
+  html,
+  body,
+  div,
+  header,
+  main,
+  footer,
+  nav,
+  section,
+  article,
+  aside,
+  form,
+  fieldset,
+  label,
+  input,
+  textarea,
+  select,
+  button,
+  a,
+  img,
+  picture,
+  figure,
+  ul,
+  ol,
+  li,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  dialog,
+  [popover],
+  table,
+  th,
+  td,
+  span,
+  svg
+) {
+  /* Set directly, not inherited: Angular host elements (pb-*) would break an inherit chain. */
+  box-sizing: border-box;
+}
+
+:where(body) {
+  margin: 0;
+}
+
+:where(img, picture, svg, video, canvas) {
+  display: block;
+  max-inline-size: 100%;
+}
+
+:where(img, video) {
+  block-size: auto;
+}
+
+:where(input, button, textarea, select) {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+:where(button) {
+  cursor: pointer;
+}
+
+:where(fieldset) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+:where(legend) {
+  padding: 0;
+}

@@ -1,0 +1,10 @@
+/*
+ * Global stylesheet. Layer order is fixed here (DESIGN.md §6).
+ * Component styles live in each component's stylesheet inside `@layer components`.
+ */
+@layer reset, tokens, base, layout, components, utilities;
+
+@import './styles/reset.css' layer(reset);
+@import './styles/tokens.css' layer(tokens);
+@import './styles/base.css' layer(base);
+@import './styles/utilities.css' layer(utilities);

@@ -1,0 +1,54 @@
+@layer components {
+  .cities {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .city {
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .city-name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size-adjust: from-font;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap-target);
+    padding-inline: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    background-color: var(--color-bg);
+    text-decoration: underline;
+  }
+
+  .error {
+    display: flex;
+    gap: var(--space-2);
+    color: var(--color-danger);
+  }
+}

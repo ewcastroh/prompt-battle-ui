@@ -1,0 +1,38 @@
+@layer components {
+  .stage {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--space-6);
+    min-block-size: 100dvh;
+    max-inline-size: none;
+    text-align: center;
+  }
+
+  .stage-city {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size-adjust: from-font;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--syntax-keyword);
+  }
+
+  .stage-title {
+    margin: 0;
+    font-size: var(--text-stage-title);
+  }
+
+  /* Stage rule: no body text smaller than --text-xl (DESIGN.md §6). */
+  .stage-note,
+  .stage .status {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--color-text-muted);
+  }
+
+  .stage .status {
+    border: 0;
+    justify-content: center;
+  }
+}

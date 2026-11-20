@@ -1,0 +1,24 @@
+# Cloudflare Pages headers. GitHub Pages ignores this file (it can't set headers).
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# Runtime config (D-017): always revalidate so a new API_BASE_URL applies at once.
+/config.json
+  Cache-Control: no-cache
+
+# Translations are not content-hashed: revalidate on every load.
+/i18n/*
+  Cache-Control: no-cache
+
+# Content-hashed bundles never change.
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=604800

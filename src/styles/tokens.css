@@ -1,0 +1,200 @@
+/*
+ * Design tokens (DESIGN.md §3–§5, §8).
+ * Two layers: raw palette (--palette-*-light / --palette-*-dark) and semantic tokens (--color-*).
+ * Components use semantic tokens only.
+ *
+ * Contrast of every text/control pair was checked in U1 (WCAG 2.2 AA, both themes).
+ */
+
+:root {
+  /* ---- Raw palette ---- */
+  --palette-bg-light: #fafaf7;
+  --palette-bg-dark: #0e1117;
+  --palette-surface-light: #ffffff;
+  --palette-surface-dark: #161b22;
+  --palette-surface-raised-light: #ffffff;
+  --palette-surface-raised-dark: #1f2630;
+  --palette-text-light: #1a1d23;
+  --palette-text-dark: #e6edf3;
+  --palette-text-muted-light: #4a5160;
+  --palette-text-muted-dark: #a3aebb;
+  --palette-border-light: #d8dbe0;
+  --palette-border-dark: #2a313c;
+  --palette-border-strong-light: #6b7280;
+  --palette-border-strong-dark: #6e7a8a;
+  --palette-accent-light: #5b2bd9;
+  --palette-accent-dark: #b69cff;
+  --palette-accent-text-light: #ffffff;
+  --palette-accent-text-dark: #1a0b3d;
+  --palette-focus-light: #5b2bd9;
+  --palette-focus-dark: #d2c2ff;
+  --palette-success-light: #1b7f3b;
+  --palette-success-dark: #56d364;
+  --palette-warning-light: #8a5a00;
+  --palette-warning-dark: #e3b341;
+  --palette-danger-light: #b42318;
+  --palette-danger-dark: #ff7b72;
+  --palette-info-light: #0b5cad;
+  --palette-info-dark: #79c0ff;
+
+  /* ---- Semantic colors: light values for browsers without light-dark() (see fallback below) ---- */
+  --color-bg: var(--palette-bg-light);
+  --color-surface: var(--palette-surface-light);
+  --color-surface-raised: var(--palette-surface-raised-light);
+  --color-text: var(--palette-text-light);
+  --color-text-muted: var(--palette-text-muted-light);
+  --color-border: var(--palette-border-light);
+  --color-border-strong: var(--palette-border-strong-light);
+  --color-accent: var(--palette-accent-light);
+  --color-accent-text: var(--palette-accent-text-light);
+  --color-focus: var(--palette-focus-light);
+  --color-success: var(--palette-success-light);
+  --color-warning: var(--palette-warning-light);
+  --color-danger: var(--palette-danger-light);
+  --color-info: var(--palette-info-light);
+
+  /* Syntax accents: decoration only */
+  --syntax-keyword: var(--color-accent);
+  --syntax-string: var(--color-success);
+  --syntax-number: var(--color-warning);
+  --syntax-function: var(--color-info);
+  --syntax-comment: var(--color-text-muted);
+
+  /* Browser UI */
+  --color-scrollbar-thumb: var(--color-border-strong);
+  --color-scrollbar-track: var(--color-bg);
+
+  /* ---- Typography (DESIGN.md §4) ---- */
+  --font-body: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --text-stage-title: clamp(2.5rem, 1.5rem + 3vw, 5rem);
+  --text-stage-hero: clamp(5rem, 3rem + 8vw, 12rem);
+
+  /* ---- Space, shape, elevation (DESIGN.md §5) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 999px;
+  --shadow-raised: 0 0.5rem 1.5rem color-mix(in oklab, black 22%, transparent);
+  --tap-target: 2.75rem;
+  --border-width: 1px;
+  --focus-width: 3px;
+
+  /* ---- Motion (DESIGN.md §8) ---- */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 400ms;
+  --duration-score: 1500ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Color scheme (DESIGN.md §2): base stays `light dark`; the meta tag overrides it ---- */
+  color-scheme: light dark;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='dark']) {
+  color-scheme: dark;
+}
+
+:root:has(> head > meta[name='color-scheme'][content='light']) {
+  color-scheme: light;
+}
+
+/* Modern browsers: light-dark() follows the computed color-scheme, including the override. */
+@supports (color: light-dark(#fff, #000)) {
+  :root {
+    --color-bg: light-dark(var(--palette-bg-light), var(--palette-bg-dark));
+    --color-surface: light-dark(var(--palette-surface-light), var(--palette-surface-dark));
+    --color-surface-raised: light-dark(
+      var(--palette-surface-raised-light),
+      var(--palette-surface-raised-dark)
+    );
+    --color-text: light-dark(var(--palette-text-light), var(--palette-text-dark));
+    --color-text-muted: light-dark(var(--palette-text-muted-light), var(--palette-text-muted-dark));
+    --color-border: light-dark(var(--palette-border-light), var(--palette-border-dark));
+    --color-border-strong: light-dark(
+      var(--palette-border-strong-light),
+      var(--palette-border-strong-dark)
+    );
+    --color-accent: light-dark(var(--palette-accent-light), var(--palette-accent-dark));
+    --color-accent-text: light-dark(
+      var(--palette-accent-text-light),
+      var(--palette-accent-text-dark)
+    );
+    --color-focus: light-dark(var(--palette-focus-light), var(--palette-focus-dark));
+    --color-success: light-dark(var(--palette-success-light), var(--palette-success-dark));
+    --color-warning: light-dark(var(--palette-warning-light), var(--palette-warning-dark));
+    --color-danger: light-dark(var(--palette-danger-light), var(--palette-danger-dark));
+    --color-info: light-dark(var(--palette-info-light), var(--palette-info-dark));
+  }
+}
+
+/*
+ * Mandatory fallback for browsers without light-dark() (older iPhones):
+ * dark values when the system is dark and there is no `light` override, or when `dark` is forced.
+ * The two selectors carry the same values; they can't share one rule because one sits in a media query.
+ */
+@supports not (color: light-dark(#fff, #000)) {
+  @media (prefers-color-scheme: dark) {
+    :root:not(:has(> head > meta[name='color-scheme'][content='light'])) {
+      --color-bg: var(--palette-bg-dark);
+      --color-surface: var(--palette-surface-dark);
+      --color-surface-raised: var(--palette-surface-raised-dark);
+      --color-text: var(--palette-text-dark);
+      --color-text-muted: var(--palette-text-muted-dark);
+      --color-border: var(--palette-border-dark);
+      --color-border-strong: var(--palette-border-strong-dark);
+      --color-accent: var(--palette-accent-dark);
+      --color-accent-text: var(--palette-accent-text-dark);
+      --color-focus: var(--palette-focus-dark);
+      --color-success: var(--palette-success-dark);
+      --color-warning: var(--palette-warning-dark);
+      --color-danger: var(--palette-danger-dark);
+      --color-info: var(--palette-info-dark);
+    }
+  }
+
+  :root:has(> head > meta[name='color-scheme'][content='dark']) {
+    --color-bg: var(--palette-bg-dark);
+    --color-surface: var(--palette-surface-dark);
+    --color-surface-raised: var(--palette-surface-raised-dark);
+    --color-text: var(--palette-text-dark);
+    --color-text-muted: var(--palette-text-muted-dark);
+    --color-border: var(--palette-border-dark);
+    --color-border-strong: var(--palette-border-strong-dark);
+    --color-accent: var(--palette-accent-dark);
+    --color-accent-text: var(--palette-accent-text-dark);
+    --color-focus: var(--palette-focus-dark);
+    --color-success: var(--palette-success-dark);
+    --color-warning: var(--palette-warning-dark);
+    --color-danger: var(--palette-danger-dark);
+    --color-info: var(--palette-info-dark);
+  }
+}
+
+/* Strengthen only low-emphasis colors (DESIGN.md §3). */
+@media (prefers-contrast: more) {
+  :root {
+    --color-text-muted: var(--color-text);
+    --color-border: var(--color-border-strong);
+  }
+}
+
+/* Forced colors: system colors for boundaries and focus; no shadows (DESIGN.md §2.7, §5). */
+@media (forced-colors: active) {
+  :root {
+    --color-border: CanvasText;
+    --color-border-strong: ButtonBorder;
+    --color-focus: Highlight;
+    --shadow-raised: none;
+  }
+}

@@ -1,0 +1,142 @@
+@layer components {
+  :host {
+    display: inline-block;
+  }
+
+  .trigger,
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: var(--tap-target);
+    min-block-size: var(--tap-target);
+    padding: var(--space-2);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .trigger:hover,
+  .theme-toggle:hover {
+    background-color: var(--color-bg);
+  }
+
+  .theme-option {
+    display: inline-flex;
+  }
+
+  .panel {
+    inline-size: min(18rem, 100vw - 2 * var(--space-4));
+    padding: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-raised);
+    color: var(--color-text);
+    box-shadow: var(--shadow-raised);
+  }
+
+  /* Tethered below the trigger where anchor positioning exists; otherwise the UA centers it. */
+  @supports (position-area: block-end) {
+    .panel:not(.no-popover) {
+      inset: auto;
+      margin: 0;
+      margin-block-start: var(--space-2);
+      position-area: block-end span-inline-start;
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline;
+    }
+  }
+
+  /* No Popover API: a fixed disclosure under the header's settings button. */
+  .panel.no-popover {
+    position: fixed;
+    inset-block-start: calc(var(--tap-target) + var(--space-6));
+    inset-inline-end: var(--space-4);
+    z-index: 10;
+  }
+
+  .panel.no-popover[hidden] {
+    display: none;
+  }
+
+  .title {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .row + .row {
+    margin-block-start: var(--space-4);
+    padding-block-start: var(--space-4);
+    border-block-start: var(--border-width) solid var(--color-border);
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  /* <legend> can't be a flex item in every engine; float it out of the fieldset border flow. */
+  legend.label {
+    float: inline-start;
+    padding-block: var(--space-2);
+  }
+
+  .segmented {
+    display: inline-flex;
+    gap: var(--space-2);
+  }
+
+  .segment {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: var(--tap-target);
+    min-block-size: var(--tap-target);
+    padding-inline: var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* The native radio stays in the accessibility tree and receives focus; the label is the visual. */
+  .segment-input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .segment:has(.segment-input:checked) {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .segment:has(.segment-input:focus-visible) {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    .segment:has(.segment-input:checked) {
+      border-color: Highlight;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}

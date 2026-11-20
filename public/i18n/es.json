@@ -1,0 +1,97 @@
+{
+  "app": {
+    "brand": "prompt-battle",
+    "eventTitle": "Prompt Battle: ¡Compila tu Imaginación!"
+  },
+  "boot": {
+    "title": "No pudimos cargar Prompt Battle",
+    "message": "Revisa tu conexión y vuelve a intentarlo.",
+    "retry": "Reintentar"
+  },
+  "settings": {
+    "open": "Abrir ajustes",
+    "title": "Ajustes",
+    "language": "Idioma",
+    "languageCode": {
+      "es": "ES",
+      "en": "EN"
+    },
+    "languageName": {
+      "es": "Español",
+      "en": "English"
+    },
+    "theme": "Tema",
+    "switchToDark": "Cambiar a tema oscuro",
+    "switchToLight": "Cambiar a tema claro"
+  },
+  "shell": {
+    "statusLanguage": "idioma: {{lang}}",
+    "statusTheme": {
+      "lightSystem": "tema: claro (del dispositivo)",
+      "lightOverride": "tema: claro (elegido)",
+      "darkSystem": "tema: oscuro (del dispositivo)",
+      "darkOverride": "tema: oscuro (elegido)"
+    }
+  },
+  "landing": {
+    "heading": "Ciudades",
+    "intro": "Los jugadores llegan con el código QR de su ciudad. Esta página es para pruebas.",
+    "play": "Jugar",
+    "stage": "Escenario",
+    "admin": "Administración",
+    "loading": "Cargando ciudades…"
+  },
+  "player": {
+    "title": "Jugar",
+    "heading": "Pantalla del jugador",
+    "placeholder": "Aquí escribirás tu prompt y verás tus imágenes. Llega pronto."
+  },
+  "stage": {
+    "title": "Escenario",
+    "placeholder": "La vista del proyector llega pronto."
+  },
+  "admin": {
+    "title": "Administración",
+    "heading": "Consola de administración",
+    "placeholder": "Aquí controlarás las rondas de tu ciudad. Llega pronto."
+  },
+  "errorPage": {
+    "title": "Algo salió mal",
+    "backHome": "Ver las ciudades"
+  },
+  "errors": {
+    "NICKNAME_INVALID": "Tu alias debe tener entre {{min}} y {{max}} caracteres: letras, números, espacios, _ o -.",
+    "NICKNAME_TAKEN": "Ese alias ya está en uso en tu ciudad. Prueba con otro.",
+    "NICKNAME_BLOCKED": "Ese alias no está permitido en este evento. Elige otro.",
+    "CITY_NOT_FOUND": "No encontramos la ciudad «{{city}}». Revisa el enlace o escanea de nuevo el código QR.",
+    "UNAUTHORIZED": "Tu sesión ya no es válida. Vuelve a entrar.",
+    "PLAYER_KICKED": "Un administrador te retiró del juego.",
+    "ROUND_NOT_OPEN": "La ronda no está abierta en este momento.",
+    "GENERATION_IN_FLIGHT": "Espera a que termine tu imagen actual antes de generar otra.",
+    "NO_ATTEMPTS_LEFT": "Ya usaste tus {{max}} intentos en esta ronda.",
+    "PROMPT_INVALID": "Tu prompt debe tener entre {{min}} y {{max}} caracteres.",
+    "PROMPT_BLOCKED": "Ese prompt no está permitido en este evento. Intenta con otra idea.",
+    "ATTEMPT_NOT_FOUND": "No encontramos ese intento.",
+    "ATTEMPT_NOT_SELECTABLE": "Solo puedes enviar una imagen terminada de la ronda abierta.",
+    "GENERATION_FAILED": "No pudimos generar la imagen. Vuelve a intentarlo.",
+    "INVALID_TRANSITION": "Esa acción no está disponible en la fase actual.",
+    "ROUND_LOCKED": "Esta ronda ya empezó en alguna ciudad y no se puede cambiar.",
+    "RATE_LIMITED": "Vas muy rápido. Espera {{retryAfterSec}} s y vuelve a intentarlo.",
+    "ADMIN_FORBIDDEN": "Eso pertenece a otra ciudad.",
+    "RESET_NOT_CONFIRMED": "Escribe RESET para confirmar el reinicio.",
+    "INTERNAL_ERROR": "Algo falló en el servidor. Vuelve a intentarlo en un momento.",
+    "ROUND_NOT_FOUND": "No encontramos esa ronda.",
+    "PLAYER_NOT_FOUND": "No encontramos a ese jugador.",
+    "ENTRY_NOT_FOUND": "No encontramos esa imagen enviada.",
+    "PREVIEW_NOT_FOUND": "Esa vista previa ya no existe. Genera otra.",
+    "PROVIDER_NOT_FOUND": "El proveedor «{{providerId}}» no existe o no tiene clave.",
+    "PROVIDER_UNAVAILABLE": "Ningún proveedor de imágenes está disponible ahora. Vuelve a intentarlo en un momento.",
+    "ROUND_NOT_READY": "La calibración de esta ronda aún no está lista.",
+    "UPLOAD_INVALID": "Sube una imagen JPEG, PNG o WebP de hasta {{maxMb}} MB.",
+    "VALIDATION_FAILED": "Revisa el campo «{{field}}».",
+    "SCORING_FAILED": "Solo puedes reevaluar una ronda cuya evaluación falló.",
+    "NOT_FOUND": "No encontramos esta página.",
+    "NETWORK_ERROR": "No hay conexión con el servidor. Revisa tu internet y vuelve a intentarlo.",
+    "UNKNOWN": "Algo salió mal. Vuelve a intentarlo."
+  }
+}
