@@ -1,0 +1,185 @@
+/*
+ * Shared component primitives (DESIGN.md §5, §7), used by screens through class names.
+ * Imported into the `components` layer. Semantic tokens only; sizes in rem; logical properties.
+ * Hover styles are gated on a fine pointer, so a tap never leaves a sticky hover (mobile-native).
+ */
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: var(--tap-target);
+  min-inline-size: var(--tap-target);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.btn-primary {
+  border-color: transparent;
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+/* Full width on phones (DESIGN.md §7 "Generate button"). */
+.btn-block {
+  inline-size: 100%;
+  min-block-size: 3rem;
+}
+
+/* Unavailable but focusable (aria-disabled): the handler ignores activation, the reason is linked. */
+.btn[aria-disabled='true'] {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.btn:not([aria-disabled='true']):active {
+  background-color: var(--color-bg);
+}
+
+.btn-primary:not([aria-disabled='true']):active {
+  background-color: color-mix(in oklab, var(--color-accent) 80%, var(--color-text));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:not([aria-disabled='true']):hover {
+    background-color: var(--color-bg);
+  }
+
+  .btn-primary:not([aria-disabled='true']):hover {
+    background-color: color-mix(in oklab, var(--color-accent) 88%, var(--color-text));
+  }
+}
+
+/* Press feedback on pointer-down (mobile-native §5); motion only when allowed (DESIGN.md §8). */
+@media (prefers-reduced-motion: no-preference) {
+  .btn {
+    transition:
+      scale var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .btn:not([aria-disabled='true']):active {
+    scale: 0.97;
+  }
+}
+
+@media (forced-colors: active) {
+  .btn {
+    border-color: ButtonText;
+  }
+
+  .btn[aria-disabled='true'] {
+    border-color: GrayText;
+    color: GrayText;
+  }
+}
+
+/* ---------- Editor-style window (the "Compiler / Terminal" frame, DESIGN.md §1) ---------- */
+
+.window {
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.window-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border-block-end: var(--border-width) solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  font-size: var(--text-sm);
+  color: var(--syntax-comment);
+  overflow-wrap: anywhere;
+}
+
+.window-body {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.window-body > * {
+  margin: 0;
+}
+
+/* ---------- Form fields ---------- */
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.field-label {
+  font-weight: 700;
+}
+
+.field-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.field-error pb-icon {
+  margin-block-start: 0.125rem;
+}
+
+.text-input {
+  inline-size: 100%;
+  min-block-size: 3rem;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.text-input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 1px var(--color-danger);
+}
+
+@media (forced-colors: active) {
+  .text-input[aria-invalid='true'] {
+    border-width: 3px;
+  }
+}
+
+/* ---------- Text ---------- */
+
+.mono {
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  font-variant-numeric: tabular-nums;
+}
+
+/* User content: nicknames and prompts can be long unbroken strings or emoji (DESIGN.md §4). */
+.user-text {
+  overflow-wrap: anywhere;
+}

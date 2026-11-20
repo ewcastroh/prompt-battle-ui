@@ -12,7 +12,10 @@ import { problemInterceptor } from './core/api/problem.interceptor';
 import { AppConfig } from './core/config/app-config';
 import { provideI18n } from './core/i18n/i18n.providers';
 import { LanguageService } from './core/i18n/language.service';
-import { fakeBackendInterceptors } from './fake-backend/fake-backend.providers';
+import {
+  fakeBackendInterceptors,
+  fakeBackendProviders,
+} from './fake-backend/fake-backend.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +30,8 @@ export const appConfig: ApplicationConfig = {
     // Runtime config (D-017) and the first language load before routing.
     provideAppInitializer(() => inject(AppConfig).load()),
     provideAppInitializer(() => inject(LanguageService).init()),
+    // `fake` build only (dev tools around the in-browser fake API); empty in real builds.
+    ...fakeBackendProviders,
     provideRouter(routes, withComponentInputBinding()),
   ],
 };

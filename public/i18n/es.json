@@ -1,12 +1,17 @@
 {
   "app": {
     "brand": "prompt-battle",
+    "name": "Prompt Battle",
     "eventTitle": "Prompt Battle: ¡Compila tu Imaginación!"
   },
   "boot": {
     "title": "No pudimos cargar Prompt Battle",
     "message": "Revisa tu conexión y vuelve a intentarlo.",
     "retry": "Reintentar"
+  },
+  "common": {
+    "errorPrefix": "Error: ",
+    "warningPrefix": "Aviso: "
   },
   "settings": {
     "open": "Abrir ajustes",
@@ -23,6 +28,9 @@
     "theme": "Tema",
     "switchToDark": "Cambiar a tema oscuro",
     "switchToLight": "Cambiar a tema claro"
+  },
+  "imageDialog": {
+    "close": "Cerrar"
   },
   "shell": {
     "statusLanguage": "idioma: {{lang}}",
@@ -42,9 +50,169 @@
     "loading": "Cargando ciudades…"
   },
   "player": {
-    "title": "Jugar",
-    "heading": "Pantalla del jugador",
-    "placeholder": "Aquí escribirás tu prompt y verás tus imágenes. Llega pronto."
+    "loading": "Cargando tu partida…",
+    "title": {
+      "loading": "Cargando",
+      "lobby": "Hola, {{nickname}}",
+      "roundOpen": "Ronda abierta",
+      "roundClosed": "¡Ronda cerrada!",
+      "practiceClosed": "¡Práctica terminada!",
+      "waiting": {
+        "ROUND_SCORED": "Ronda evaluada",
+        "MINI_PODIUM": "Top 3 de la ronda",
+        "FINAL_SCORING": "Preparando el podio",
+        "PODIUM_REVEAL": "¡Podio en vivo!",
+        "FINISHED": "¡Podio en vivo!"
+      },
+      "final": "Tu resultado final"
+    },
+    "docTitle": {
+      "loading": "Cargando",
+      "join": "Entrar",
+      "lobby": "Sala de espera",
+      "round-open": "Ronda abierta",
+      "round-closed": "Ronda cerrada",
+      "waiting": "Resultados en pantalla",
+      "final": "Tu resultado"
+    },
+    "announce": {
+      "lobby": "Estás en la sala de espera. Espera a que empiece la ronda.",
+      "roundOpen": "¡La ronda empezó!",
+      "roundClosed": "¡Ronda cerrada! La IA está evaluando.",
+      "practiceClosed": "Terminó la ronda de práctica.",
+      "final": "Ya está tu resultado final.",
+      "lastMinute": "Queda un minuto."
+    },
+    "connection": {
+      "lost": "Sin conexión con el juego. Reintentando…",
+      "restored": "Conexión recuperada.",
+      "retry": "Reintentar ahora",
+      "dismiss": "Cerrar aviso de conexión"
+    },
+    "join": {
+      "file": "entrar.sh",
+      "heading": "Entra al juego en {{city}}",
+      "nicknameLabel": "Tu alias",
+      "nicknameHint": "De {{min}} a {{max}} caracteres: letras, números, espacios, _ o -.",
+      "privacy": "Usa un alias. No escribas datos personales. Tus prompts se envían a servicios de IA de terceros para generar y evaluar imágenes.",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "errorRequired": "Escribe un alias para entrar.",
+      "kickedHint": "Si fue un error, puedes volver a entrar con otro alias."
+    },
+    "lobby": {
+      "file": "sala.txt",
+      "claimLabel": "Tu código",
+      "claimHint": "Guárdalo: si llegas al podio, lo mostrarás para reclamar tu premio.",
+      "wait": "Espera a que empiece la ronda",
+      "waitDetail": "Esta pantalla cambia sola cuando empiece. Mientras tanto, mira el proyector."
+    },
+    "round": {
+      "timeLeft": "Tiempo restante:",
+      "lastMinute": "¡Último minuto!",
+      "timeUp": "¡Se acabó el tiempo!",
+      "practiceBadge": "Ronda de práctica.",
+      "practiceNote": "No cuenta para el puntaje.",
+      "target": {
+        "heading": "Imagen objetivo",
+        "alt": "Imagen objetivo: {{name}}",
+        "zoomHint": "Toca para ampliar",
+        "dialogTitle": "Objetivo: {{name}}"
+      },
+      "editor": {
+        "file": "prompt.txt",
+        "label": "Describe la imagen",
+        "placeholder": "Ej.: una chiva colorida bajo la lluvia, de noche",
+        "counterLabel": "Caracteres:",
+        "counter": "{{count}} / {{max}}",
+        "counterLeft": "quedan {{count}}",
+        "counterFull": "límite alcanzado",
+        "attemptsLeft": "Intentos restantes: {{count}}",
+        "required": "Escribe un prompt para generar.",
+        "duplicate": "Ya generaste este mismo prompt: con la semilla de la ronda saldría la misma imagen. Cambia algo para probar otra.",
+        "duplicateOf": "Es el mismo prompt del intento {{number}}: saldría la misma imagen. Cambia algo para generar otra."
+      },
+      "generate": {
+        "label": "Generar",
+        "sending": "Enviando…",
+        "busy": "Espera a que termine tu imagen para generar otra.",
+        "noAttempts": "Ya usaste tus {{max}} intentos. Elige abajo la imagen que quieres enviar.",
+        "dismissError": "Cerrar el error de Generar"
+      },
+      "status": {
+        "idle": "Listo para compilar tu prompt",
+        "queued": "En cola · posición {{position}}",
+        "queuedWaiting": "En cola…",
+        "generating": "Compilando imagen…",
+        "done": "Intento {{number}} listo",
+        "blocked": "Intento {{number}} bloqueado: prueba otra idea",
+        "failed": "Intento {{number}} falló: no gastó un intento",
+        "late": "Intento {{number}} llegó tarde: no gastó un intento"
+      },
+      "announce": {
+        "queued": "Tu prompt está en cola, posición {{position}}.",
+        "queuedWaiting": "Tu prompt está en cola.",
+        "generating": "Compilando tu imagen.",
+        "done": "El intento {{number}} está listo.",
+        "blocked": "Tu prompt fue bloqueado. Intenta con otra idea; no gastó un intento.",
+        "failed": "No pudimos generar la imagen. No gastó un intento; vuelve a intentarlo.",
+        "late": "La imagen terminó después del cierre de la ronda y no cuenta."
+      },
+      "gallery": {
+        "heading": "Tus intentos",
+        "empty": "Aún no tienes imágenes. Escribe un prompt y pulsa Generar.",
+        "autoEntry": "Elige la que quieres enviar. Si no eliges, enviaremos tu última imagen.",
+        "changeHint": "Puedes cambiar tu elección hasta que cierre la ronda."
+      },
+      "attempt": {
+        "title": "Intento {{number}}",
+        "zoom": "Ampliar el intento {{number}}",
+        "imageAlt": "Imagen generada en el intento {{number}}",
+        "promptLabel": "Prompt",
+        "submit": "Enviar esta",
+        "selected": "Seleccionada",
+        "context": "(intento {{number}})",
+        "selectedAnnounce": "Elegiste el intento {{number}}. Puedes cambiarlo hasta que cierre la ronda.",
+        "notCounted": "No gastó un intento.",
+        "lateMessage": "Terminó después del cierre de la ronda, así que no cuenta.",
+        "dismissError": "Cerrar el error del intento {{number}}",
+        "status": {
+          "queued": "En cola · posición {{position}}",
+          "queuedWaiting": "En cola…",
+          "generating": "Compilando…",
+          "done": "Lista",
+          "blocked": "Bloqueada",
+          "failed": "Falló",
+          "late": "Llegó tarde"
+        }
+      }
+    },
+    "closed": {
+      "file": "evaluacion.log",
+      "scoring": "La IA está evaluando…",
+      "practice": "Era la ronda de práctica: no cuenta para el puntaje. ¡Prepárate para la siguiente!",
+      "grace": "Tu imagen ya estaba en camino: si termina en los próximos segundos, cuenta.",
+      "entryHeading": "Tu imagen enviada",
+      "noEntry": "No enviaste imagen en esta ronda."
+    },
+    "waiting": {
+      "file": "resultados.txt",
+      "scored": "La IA terminó de evaluar. Mira la pantalla: pronto viene lo que sigue.",
+      "mini": "Mira la pantalla: se está revelando el top 3 de esta ronda.",
+      "finalScoring": "La IA está preparando el podio final…",
+      "podium": "Mira la pantalla: se está revelando el top 5 de {{city}}. Tu resultado aparecerá aquí al final.",
+      "stayHere": "Deja esta pantalla abierta: se actualiza sola."
+    },
+    "final": {
+      "file": "resultado.txt",
+      "podium": "¡Estás en el podio! Muestra tu código {{claimCode}}",
+      "rankLabel": "Tu puesto en {{city}}",
+      "rank": "#{{rank}}",
+      "totalLabel": "Puntaje total",
+      "total": "{{total}} puntos",
+      "noRank": "Esta vez no enviaste imágenes, así que no tienes puesto.",
+      "thanks": "¡Gracias por jugar!"
+    }
   },
   "stage": {
     "title": "Escenario",
@@ -87,7 +255,7 @@
     "PROVIDER_NOT_FOUND": "El proveedor «{{providerId}}» no existe o no tiene clave.",
     "PROVIDER_UNAVAILABLE": "Ningún proveedor de imágenes está disponible ahora. Vuelve a intentarlo en un momento.",
     "ROUND_NOT_READY": "La calibración de esta ronda aún no está lista.",
-    "UPLOAD_INVALID": "Sube una imagen JPEG, PNG o WebP de hasta {{maxMb}} MB.",
+    "UPLOAD_INVALID": "Sube una imagen JPEG o PNG de hasta {{maxMb}} MB.",
     "VALIDATION_FAILED": "Revisa el campo «{{field}}».",
     "SCORING_FAILED": "Solo puedes reevaluar una ronda cuya evaluación falló.",
     "NOT_FOUND": "No encontramos esta página.",

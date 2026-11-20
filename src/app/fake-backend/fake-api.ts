@@ -53,7 +53,8 @@ const CLOSING_MS = 2000;
 const FINAL_SCORING_MS = 1500;
 const FLOOR = 0.412;
 const CLAIM_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-const NICKNAME_RE = /^[\p{L}\p{N} _-]{3,16}$/u;
+// Same rules as the API (NicknameRules, PromptRules): NFC, letters/marks/digits, code points.
+const NICKNAME_RE = /^[\p{L}\p{M}\p{Nd} _-]+$/u;
 const BLOCKLIST = ['badword', 'groseria'];
 
 interface FakePlayer {
@@ -166,6 +167,11 @@ export class FakeApi {
       true,
       480,
     );
+  }
+
+  /** Display name of a configured city (dev tools). */
+  cityName(code: string): string | null {
+    return this.cities.get(code)?.city.name ?? null;
   }
 
   handle(req: FakeRequest): FakeResponse {
@@ -514,7 +520,7 @@ export class FakeApi {
     const round = this.currentRound(city);
     if (city.phase !== 'ROUND_OPEN' || !round) throw new FakeHttpError(409, 'ROUND_NOT_OPEN');
     const prompt = normalize((body as { prompt?: unknown } | null)?.prompt);
-    if (prompt.length < 1 || prompt.length > 300)
+    if (codePoints(prompt) < 1 || codePoints(prompt) > 300)
       throw new FakeHttpError(400, 'PROMPT_INVALID', { min: 1, max: 300 });
     const mine = this.playerAttempts(player.id, round.id);
     if (mine.some((a) => ['QUEUED', 'GENERATING'].includes(this.status(a))))
@@ -1170,7 +1176,7 @@ export class FakeApi {
   private generateTarget(body: unknown) {
     const { prompt, seed } = (body ?? {}) as { prompt?: unknown; seed?: unknown };
     const text = normalize(prompt);
-    if (text.length < 1 || text.length > 1000)
+    if (codePoints(text) < 1 || codePoints(text) > 1000)
       throw new FakeHttpError(400, 'PROMPT_INVALID', { min: 1, max: 1000 });
     const usedSeed = typeof seed === 'number' ? seed : hashString(text) % 2147483647;
     const id = this.uuid();
@@ -1364,8 +1370,9 @@ export class FakeApi {
   }
 
   private validNickname(city: string, raw: unknown, exceptId?: string): string {
-    const nickname = normalize(raw);
-    if (!NICKNAME_RE.test(nickname))
+    const nickname = typeof raw === 'string' ? raw.trim().normalize('NFC') : '';
+    const length = codePoints(nickname);
+    if (length < 3 || length > 16 || !NICKNAME_RE.test(nickname))
       throw new FakeHttpError(400, 'NICKNAME_INVALID', { min: 3, max: 16 });
     if (BLOCKLIST.some((word) => fold(nickname).includes(word)))
       throw new FakeHttpError(422, 'NICKNAME_BLOCKED');
@@ -1431,6 +1438,10 @@ function isEtagPath(path: string): boolean {
 
 function normalize(value: unknown): string {
   return typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '';
+}
+
+function codePoints(value: string): number {
+  return [...value].length;
 }
 
 function fold(value: string): string {

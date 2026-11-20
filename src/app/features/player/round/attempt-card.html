@@ -1,0 +1,97 @@
+<article
+  class="card"
+  [class.is-selected]="selected()"
+  [class.has-media]="view().media !== 'none'"
+  [class]="'tone-' + view().tone"
+>
+  @switch (view().media) {
+    @case ('image') {
+      <button type="button" class="media" (click)="openImage()">
+        <img
+          pbImageRetry
+          [src]="attempt().thumbUrl | apiUrl"
+          [alt]="'player.round.attempt.zoom' | transloco: { number: number() }"
+          width="384"
+          height="384"
+          loading="lazy"
+          decoding="async"
+        />
+      </button>
+    }
+    @case ('placeholder') {
+      <div class="media placeholder" aria-hidden="true">
+        <pb-icon name="image" />
+      </div>
+    }
+  }
+
+  <header class="head">
+    <h3 class="title">{{ 'player.round.attempt.title' | transloco: { number: number() } }}</h3>
+    <p class="status">
+      <pb-icon [name]="view().icon" />
+      <span>{{ view().statusKey | transloco: view().statusParams }}</span>
+    </p>
+  </header>
+
+  @if (view().messageKey; as key) {
+    <p class="message">
+      {{ key | transloco }}
+      <span class="note">{{ 'player.round.attempt.notCounted' | transloco }}</span>
+    </p>
+  }
+
+  <p class="prompt user-text" [class.clamped]="view().media === 'image'">{{ attempt().prompt }}</p>
+
+  @if (error(); as message) {
+    <pb-inline-message
+      tone="danger"
+      [dismissLabel]="'player.round.attempt.dismissError' | transloco: { number: number() }"
+      (dismissed)="errorDismissed.emit()"
+    >
+      {{ message.key | transloco: message.params }}
+    </pb-inline-message>
+  }
+
+  @if (showSubmit()) {
+    <footer class="actions">
+      <button
+        type="button"
+        class="btn submit"
+        [class.is-selected]="selected()"
+        [attr.aria-disabled]="selected() ? 'true' : null"
+        (click)="onSubmit()"
+      >
+        @if (selected()) {
+          <pb-icon name="check" />
+          {{ 'player.round.attempt.selected' | transloco }}
+          <span class="visually-hidden">{{
+            'player.round.attempt.context' | transloco: { number: number() }
+          }}</span>
+        } @else {
+          <pb-icon name="send" />
+          {{ 'player.round.attempt.submit' | transloco }}
+          <span class="visually-hidden">{{
+            'player.round.attempt.context' | transloco: { number: number() }
+          }}</span>
+        }
+      </button>
+    </footer>
+  } @else if (selected()) {
+    <footer class="actions">
+      <p class="badge">
+        <pb-icon name="check" />
+        {{ 'player.round.attempt.selected' | transloco }}
+      </p>
+    </footer>
+  }
+
+  @if (view().media === 'image') {
+    <pb-image-dialog
+      [heading]="'player.round.attempt.title' | transloco: { number: number() }"
+      [imageUrl]="attempt().imageUrl"
+      [alt]="'player.round.attempt.imageAlt' | transloco: { number: number() }"
+      [caption]="attempt().prompt"
+      [captionLabel]="'player.round.attempt.promptLabel' | transloco"
+    />
+  }
+</article>

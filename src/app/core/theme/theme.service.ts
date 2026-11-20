@@ -66,9 +66,23 @@ export class ThemeService {
   }
 
   private applyMeta(): void {
+    const stored = this.stored();
     const meta = this.document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
     if (meta) {
-      meta.content = this.stored() ?? SYSTEM_CONTENT;
+      meta.content = stored ?? SYSTEM_CONTENT;
+    }
+    // The status bar color follows the rendered scheme: with an override, only the matching
+    // theme-color applies; otherwise each one follows its media query (index.html does the same).
+    const themeColors = this.document.querySelectorAll<HTMLMetaElement>(
+      'meta[name="theme-color"][data-scheme]',
+    );
+    for (const themeColor of themeColors) {
+      const scheme = themeColor.dataset['scheme'];
+      themeColor.media = stored
+        ? scheme === stored
+          ? 'all'
+          : 'not all'
+        : `(prefers-color-scheme: ${scheme})`;
     }
   }
 

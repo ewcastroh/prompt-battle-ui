@@ -1,0 +1,46 @@
+<pb-app-header [title]="heading()" [cityName]="cityName()" [titleId]="titleId" />
+<main class="player">
+  @if (state.offline() && !offlineDismissed()) {
+    <pb-inline-message
+      class="connection"
+      tone="warning"
+      [dismissLabel]="'player.connection.dismiss' | transloco"
+      (dismissed)="offlineDismissed.set(true)"
+    >
+      {{ 'player.connection.lost' | transloco }}
+      <span actions>
+        <button type="button" class="btn retry" (click)="retry()">
+          <pb-icon name="refresh-cw" />
+          {{ 'player.connection.retry' | transloco }}
+        </button>
+      </span>
+    </pb-inline-message>
+  }
+
+  @if (state.me(); as me) {
+    @switch (state.screen()) {
+      @case ('lobby') {
+        <pb-lobby-screen [me]="me" />
+      }
+      @case ('round-open') {
+        <pb-round-open-screen [me]="me" [city]="city()" />
+      }
+      @case ('round-closed') {
+        <pb-round-closed-screen [me]="me" />
+      }
+      @case ('waiting') {
+        <pb-waiting-screen [me]="me" />
+      }
+      @case ('final') {
+        <pb-final-screen [me]="me" />
+      }
+    }
+  } @else if (state.screen() === 'join') {
+    <pb-join-screen [cityCode]="city()" [cityName]="cityName()" [reason]="state.joinReason()" />
+  } @else {
+    <div class="loading">
+      <pb-spinner labelledBy="player-loading" />
+      <p id="player-loading">{{ 'player.loading' | transloco }}</p>
+    </div>
+  }
+</main>

@@ -4,6 +4,11 @@
   accent-color: var(--color-accent);
   /* Never transition scrollbar-color (WebKit flicker). */
   scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  /* No gray flash over tapped controls; every control has its own :active state (mobile-native §2). */
+  -webkit-tap-highlight-color: transparent;
+  /* No font inflation in landscape; 100% (not none) keeps browser text scaling working. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -14,6 +19,37 @@ body {
   font-size-adjust: from-font;
   line-height: 1.5;
   text-align: start;
+  /* Long words wrap instead of widening the page (no horizontal scroll at 320 px). */
+  overflow-wrap: break-word;
+}
+
+:where(a, code) {
+  overflow-wrap: anywhere;
+}
+
+/* At least 16 px so iOS Safari doesn't zoom into a focused field (mobile-native §4). */
+:where(input, textarea, select) {
+  font-size: max(1rem, 1em);
+}
+
+/* Tap targets ≥ 44 px (DESIGN.md §5); padding and content can only make them bigger. */
+:where(button, select, textarea, input:not([type='checkbox'], [type='radio'])) {
+  min-block-size: var(--tap-target);
+}
+
+:where(button) {
+  min-inline-size: var(--tap-target);
+}
+
+/* Controls: no double-tap-zoom delay, no text selection or callout on long press (mobile-native §5, §8). */
+:where(button, [role='button'], label:has(> input[type='radio'], > input[type='checkbox'])) {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:where(button) {
+  -webkit-touch-callout: none;
 }
 
 h1,
@@ -76,4 +112,26 @@ samp {
 :focus-visible {
   outline: var(--focus-width) solid var(--color-focus);
   outline-offset: 2px;
+}
+
+/* Screen headings take programmatic focus after a screen change (tabindex="-1"); they are not
+   controls, so they never show the ring for a mouse or touch. */
+:where(h1[tabindex='-1']):focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Screen changes cross-fade where View Transitions exist (DESIGN.md §8); none with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(root) {
+    animation-duration: var(--duration-base);
+    animation-timing-function: var(--ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

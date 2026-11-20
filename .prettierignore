@@ -4,3 +4,7 @@ coverage
 node_modules
 package-lock.json
 public/fonts
+e2e/.results
+e2e/.report
+e2e/screenshots
+.impeccable

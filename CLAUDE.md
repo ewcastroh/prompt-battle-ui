@@ -5,19 +5,22 @@ Specs live in the parent repo `prompt-battle-kit`: `docs/SPEC.md`, `docs/API.md`
 
 ## Commands
 
-| Task                                                      | Command                                                          |
-| --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Install                                                   | `npm ci`                                                         |
-| Dev server, real API at `config.json`                     | `npm start` → http://localhost:4200                              |
-| Dev server, in-browser fake API                           | `npm run start:fake` (`ng serve -c fake`)                        |
-| Unit tests (Vitest)                                       | `npm run test:ci` (watch: `npm test`)                            |
-| Lint / format                                             | `npm run lint`, `npm run format:check` (`npm run format` to fix) |
-| Translation key parity                                    | `npm run i18n:check`                                             |
-| Production build                                          | `npm run build` → `dist/prompt-battle-ui/browser`                |
-| **Full verification (run before saying a phase is done)** | `npm run verify`                                                 |
+| Task                                                        | Command                                                          |
+| ----------------------------------------------------------- | ---------------------------------------------------------------- |
+| Install                                                     | `npm ci`                                                         |
+| Dev server, real API at `config.json`                       | `npm start` → http://localhost:4200                              |
+| Dev server, in-browser fake API                             | `npm run start:fake` (`ng serve -c fake`)                        |
+| Unit tests (Vitest)                                         | `npm run test:ci` (watch: `npm test`)                            |
+| Lint / format                                               | `npm run lint`, `npm run format:check` (`npm run format` to fix) |
+| Translation key parity                                      | `npm run i18n:check`                                             |
+| Production build                                            | `npm run build` → `dist/prompt-battle-ui/browser`                |
+| Playwright smoke (fake API, starts its own server on :4321) | `npm run e2e`                                                    |
+| Every player screen, demo + worst case, with screenshots    | `npm run e2e:screens` → `e2e/screenshots/` (git-ignored)         |
+| **Full verification (run before saying a phase is done)**   | `npm run verify && npm run e2e && npm run e2e:screens`           |
 
 Fake admin tokens (fake backend only): `fake-admin-token-mde-0123456789`, `fake-admin-token-bog-0123456789`.
 Fake prompt hooks: `[blocked]` → BLOCKED, `[fail]` → FAILED, `[sim=0.83]` → that cosine.
+Fake dev tools (`npm run start:fake` only): `/play/mde?dev` shows a "Demo data / Worst case" toolbar; `/play/mde?fixture=<screen>&data=demo|worst` pins a player screen (list in `src/app/fake-backend/fake-fixtures.ts`); Playwright drives admin actions through `window.__pbFake`.
 
 ## Project rules
 
@@ -28,7 +31,9 @@ Fake prompt hooks: `[blocked]` → BLOCKED, `[fail]` → FAILED, `[sim=0.83]` �
 - **i18n:** Transloco, Spanish default, files `public/i18n/es.json` and `en.json` with identical keys and params. Every string goes through them (only `src/boot-error.ts` has a last-resort copy, for when even the translation file can't load).
 - **Theme:** `ThemeService` + the inline script in `src/index.html` (DESIGN.md §2). The `<meta name="color-scheme">` is the single source; CSS maps it back to `color-scheme`. Use `.theme-if-light` / `.theme-if-dark` for non-color branches.
 - **CSS:** `@layer reset, tokens, base, layout, components, utilities`. Tokens in `src/styles/tokens.css`; components use semantic tokens only and wrap their styles in `@layer components`. No `font-size` on `:root`/`html`. Sizes in `rem`, logical properties.
-- **Fake backend:** `src/app/fake-backend/`, wired only by the `fake` build configuration (fileReplacements). Production bundles must never contain it.
+- **Fake backend:** `src/app/fake-backend/`, wired only by the `fake` build configuration (fileReplacements). Production bundles must never contain it (nor its fixtures and dev tools).
+- **Player state:** `features/player/player-state.service.ts` is the only code that calls the player endpoints (polls `/api/me` ≤ 1.5 s with `If-None-Match`). Screens read its signals; one polite live region (`core/ui/announcer.ts`) speaks for the whole page.
+- **Tests:** unit tests next to the code (Vitest); e2e in `e2e/` (Playwright + `@axe-core/playwright`: no AXE violations, no third-party requests, tap targets ≥ 44 px, no horizontal scroll).
 - **No runtime CDN calls.** Fonts are in `public/fonts` (declared in `index.html` so URLs follow the base href); icons are copied Lucide SVGs in `shared/icon` (see `THIRD_PARTY_NOTICES.md`).
 - Run the `modern-web-guidance` skill before writing HTML/CSS/client JS for a pattern. Mobile first (360×800), tap targets ≥ 44 px, WCAG 2.2 AA in both themes.
 - Never commit secrets. Commits are made as the owner; no AI attribution trailers.

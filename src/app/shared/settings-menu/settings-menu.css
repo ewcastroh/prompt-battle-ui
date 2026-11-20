@@ -16,9 +16,17 @@
     color: var(--color-text);
   }
 
-  .trigger:hover,
-  .theme-toggle:hover {
+  .trigger:active,
+  .theme-toggle:active {
     background-color: var(--color-bg);
+  }
+
+  /* Hover only with a fine pointer: a tap would leave it stuck (mobile-native §1). */
+  @media (hover: hover) and (pointer: fine) {
+    .trigger:hover,
+    .theme-toggle:hover {
+      background-color: var(--color-bg);
+    }
   }
 
   .theme-option {

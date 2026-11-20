@@ -1,0 +1,31 @@
+@layer components {
+  :host {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .heading {
+    margin: 0;
+  }
+
+  .form {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .privacy {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin: 0;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    font-size: var(--text-sm);
+  }
+
+  .privacy pb-icon {
+    margin-block-start: 0.125rem;
+    color: var(--syntax-function);
+  }
+}

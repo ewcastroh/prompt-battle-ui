@@ -1,0 +1,167 @@
+@layer components {
+  :host {
+    display: block;
+    block-size: 100%;
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    block-size: 100%;
+    padding: var(--space-2) var(--space-2) var(--space-3);
+    /* Same border width in every state: selection only changes color and outline (no layout shift). */
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+  }
+
+  .card.is-selected {
+    border-color: var(--color-success);
+    outline: 2px solid var(--color-success);
+    outline-offset: -1px;
+  }
+
+  .media {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+    overflow: clip;
+  }
+
+  button.media {
+    cursor: zoom-in;
+  }
+
+  .media img {
+    inline-size: 100%;
+    block-size: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    display: grid;
+    place-items: center;
+    border: var(--border-width) dashed var(--color-border-strong);
+    color: var(--color-text-muted);
+    --icon-size: 2rem;
+  }
+
+  .head {
+    display: grid;
+    gap: var(--space-1);
+    padding-inline: var(--space-1);
+  }
+
+  .title {
+    margin: 0;
+    font-size: var(--text-md);
+  }
+
+  .status {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-1);
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size-adjust: from-font;
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .status pb-icon {
+    margin-block-start: 0.125rem;
+  }
+
+  .tone-busy .status {
+    color: var(--color-text-muted);
+  }
+  .tone-done .status {
+    color: var(--color-success);
+  }
+  .tone-problem .status {
+    color: var(--color-danger);
+  }
+
+  .message {
+    margin: 0;
+    padding-inline: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  .note {
+    display: block;
+    color: var(--color-text-muted);
+  }
+
+  .prompt {
+    margin: 0;
+    padding-inline: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Cards with an image clamp the prompt; the zoom dialog shows it in full. */
+  .prompt.clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-self: end;
+  }
+
+  /* Narrow two-column cards (down to 320 px): compact text, the icon may wrap above the label,
+     and words never break in the middle ("Seleccionada", not "Seleccionad/a"). */
+  .submit {
+    flex-wrap: wrap;
+    gap: 0 var(--space-1);
+    inline-size: 100%;
+    padding-inline: var(--space-1);
+    font-size: var(--text-sm);
+    overflow-wrap: normal;
+  }
+
+  .submit.is-selected,
+  .badge {
+    border-color: var(--color-success);
+    background-color: var(--color-surface);
+    color: var(--color-success);
+    cursor: default;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    inline-size: 100%;
+    min-block-size: var(--tap-target);
+    margin: 0;
+    border: var(--border-width) solid var(--color-success);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+  }
+
+  @media (forced-colors: active) {
+    .card.is-selected {
+      outline-color: Highlight;
+      border-color: Highlight;
+    }
+
+    .submit.is-selected,
+    .badge {
+      border-color: Highlight;
+      color: CanvasText;
+    }
+  }
+}

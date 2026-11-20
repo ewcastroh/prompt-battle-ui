@@ -1,11 +1,35 @@
 import { Component, input } from '@angular/core';
 
 /**
- * Icons copied from Lucide (https://lucide.dev), ISC License, Copyright (c) 2026 Lucide Icons and
- * Contributors; `check`, `x` and `moon` derive from Feather (MIT, Copyright (c) 2013-present Cole Bemis).
+ * Icons copied from Lucide 1.0.0 (https://lucide.dev), ISC License, Copyright (c) 2026 Lucide Icons
+ * and Contributors; `check`, `x`, `moon`, `zoom-in`, `refresh-cw`, `send`, `info` and `monitor`
+ * derive from Feather (MIT, Copyright (c) 2013-present Cole Bemis).
  * Full notices: THIRD_PARTY_NOTICES.md. Only the icons the app uses are included.
  */
-export type IconName = 'settings' | 'sun' | 'moon' | 'check' | 'x' | 'circle-alert' | 'map-pin';
+export type IconName =
+  | 'settings'
+  | 'sun'
+  | 'moon'
+  | 'check'
+  | 'x'
+  | 'circle-alert'
+  | 'map-pin'
+  | 'zoom-in'
+  | 'loader-circle'
+  | 'timer'
+  | 'ban'
+  | 'triangle-alert'
+  | 'circle-check'
+  | 'wifi-off'
+  | 'refresh-cw'
+  | 'trophy'
+  | 'hourglass'
+  | 'send'
+  | 'sparkles'
+  | 'info'
+  | 'ticket'
+  | 'image'
+  | 'monitor';
 
 /**
  * Decorative inline SVG icon (DESIGN.md §7). Always `aria-hidden`: the control next to it carries the
@@ -58,6 +82,99 @@ export type IconName = 'settings' | 'sun' | 'moon' | 'check' | 'x' | 'circle-ale
             d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
           />
           <circle cx="12" cy="10" r="3" />
+        }
+        @case ('zoom-in') {
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" x2="16.65" y1="21" y2="16.65" />
+          <line x1="11" x2="11" y1="8" y2="14" />
+          <line x1="8" x2="14" y1="11" y2="11" />
+        }
+        @case ('loader-circle') {
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        }
+        @case ('timer') {
+          <line x1="10" x2="14" y1="2" y2="2" />
+          <line x1="12" x2="15" y1="14" y2="11" />
+          <circle cx="12" cy="14" r="8" />
+        }
+        @case ('ban') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M4.929 4.929 19.07 19.071" />
+        }
+        @case ('triangle-alert') {
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+          <path d="M12 9v4" />
+          <path d="M12 17h.01" />
+        }
+        @case ('circle-check') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="m9 12 2 2 4-4" />
+        }
+        @case ('wifi-off') {
+          <path d="M12 20h.01" />
+          <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+          <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
+          <path d="M19 12.859a10 10 0 0 0-2.007-1.523" />
+          <path d="M2 8.82a15 15 0 0 1 4.177-2.643" />
+          <path d="M22 8.82a15 15 0 0 0-11.288-3.764" />
+          <path d="m2 2 20 20" />
+        }
+        @case ('refresh-cw') {
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+          <path d="M21 3v5h-5" />
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+          <path d="M8 16H3v5" />
+        }
+        @case ('trophy') {
+          <path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978" />
+          <path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978" />
+          <path d="M18 9h1.5a1 1 0 0 0 0-5H18" />
+          <path d="M4 22h16" />
+          <path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z" />
+          <path d="M6 9H4.5a1 1 0 0 1 0-5H6" />
+        }
+        @case ('hourglass') {
+          <path d="M5 22h14" />
+          <path d="M5 2h14" />
+          <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+          <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
+        }
+        @case ('send') {
+          <path
+            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+          />
+          <path d="m21.854 2.147-10.94 10.939" />
+        }
+        @case ('sparkles') {
+          <path
+            d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"
+          />
+          <path d="M20 2v4" />
+          <path d="M22 4h-4" />
+          <circle cx="4" cy="20" r="2" />
+        }
+        @case ('info') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        }
+        @case ('ticket') {
+          <path
+            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
+          />
+          <path d="M13 5v2" />
+          <path d="M13 17v2" />
+          <path d="M13 11v2" />
+        }
+        @case ('image') {
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+          <circle cx="9" cy="9" r="2" />
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+        }
+        @case ('monitor') {
+          <rect width="20" height="14" x="2" y="3" rx="2" />
+          <line x1="8" x2="16" y1="21" y2="21" />
+          <line x1="12" x2="12" y1="17" y2="21" />
         }
       }
     </svg>

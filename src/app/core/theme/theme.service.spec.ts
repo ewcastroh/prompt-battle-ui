@@ -138,6 +138,32 @@ describe('ThemeService (DESIGN.md §2 two-state toggle)', () => {
     expect(theme.override()).toBeNull();
   });
 
+  it('points the status-bar theme-color at the rendered scheme (mobile-native §10)', () => {
+    const light = document.createElement('meta');
+    light.name = 'theme-color';
+    light.dataset['scheme'] = 'light';
+    const dark = document.createElement('meta');
+    dark.name = 'theme-color';
+    dark.dataset['scheme'] = 'dark';
+    document.head.append(light, dark);
+    try {
+      const theme = setup(false);
+      expect(light.media).toBe('(prefers-color-scheme: light)');
+      expect(dark.media).toBe('(prefers-color-scheme: dark)');
+
+      theme.toggle(); // dark override
+      expect(light.media).toBe('not all');
+      expect(dark.media).toBe('all');
+
+      theme.toggle(); // back to the system
+      expect(light.media).toBe('(prefers-color-scheme: light)');
+      expect(dark.media).toBe('(prefers-color-scheme: dark)');
+    } finally {
+      light.remove();
+      dark.remove();
+    }
+  });
+
   it('still applies the theme when storage is blocked', () => {
     const theme = setup(false);
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {

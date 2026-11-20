@@ -8,17 +8,15 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Observable, delay, dematerialize, materialize, of, throwError } from 'rxjs';
-import { FakeApi } from './fake-api';
+import { fakeApi, fakeControls, fixtureResponse } from './fake-dev-tools';
 
 /** Simulated network latency for every fake response. */
 const LATENCY_MS = 120;
 
-/** One fake backend per page load, shared by every request. */
-let api: FakeApi | null = null;
-
 /**
- * Answers `/api/**` requests from the in-memory {@link FakeApi} instead of the network.
- * Wired only by the `fake` build configuration (fileReplacements). Other requests pass through.
+ * Answers `/api/**` requests from the in-memory {@link FakeApi} instead of the network (or from a
+ * player fixture, see fake-dev-tools.ts). Wired only by the `fake` build configuration
+ * (fileReplacements). Other requests pass through.
  */
 export const fakeBackendInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
@@ -28,14 +26,22 @@ export const fakeBackendInterceptor: HttpInterceptorFn = (
   if (!url.pathname.startsWith('/api/')) {
     return next(req);
   }
-  api ??= new FakeApi();
-  const result = api.handle({
+  if (fakeControls.offline) {
+    // What a dropped connection looks like to HttpClient: status 0, no body.
+    return throwError(() => new HttpErrorResponse({ status: 0, url: url.href })).pipe(
+      materialize(),
+      delay(LATENCY_MS),
+      dematerialize(),
+    );
+  }
+  const request = {
     method: req.method,
     path: url.pathname,
     query: url.searchParams,
     headers: req.headers,
     body: req.body,
-  });
+  };
+  const result = fixtureResponse(request) ?? fakeApi().handle(request);
   const headers = new HttpHeaders(result.headers);
   const response$ =
     result.status >= 200 && result.status < 300

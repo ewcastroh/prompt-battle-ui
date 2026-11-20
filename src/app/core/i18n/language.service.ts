@@ -1,6 +1,7 @@
 import { DOCUMENT, Service, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslocoService } from '@jsverse/transloco';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 
 export const LANGUAGES = ['es', 'en'] as const;
 export type Language = (typeof LANGUAGES)[number];
@@ -25,8 +26,24 @@ export class LanguageService {
   private readonly transloco = inject(TranslocoService);
   private readonly document = inject(DOCUMENT);
   private readonly current = signal<Language>(DEFAULT_LANGUAGE);
+  private readonly loads = signal(0);
 
   readonly language = this.current.asReadonly();
+  /**
+   * Changes each time a translation file finishes loading. A switch to a language that isn't loaded
+   * yet changes `language()` first, while `translate()` still returns keys; a `computed` that calls
+   * `translate()` reads this too, so it runs again once the file is there.
+   */
+  readonly translationsLoaded = this.loads.asReadonly();
+
+  constructor() {
+    this.transloco.events$
+      .pipe(
+        filter((event) => event.type === 'translationLoadSuccess'),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.loads.update((count) => count + 1));
+  }
 
   /** Applies the stored language (or the default) and waits for its translations. */
   async init(): Promise<void> {

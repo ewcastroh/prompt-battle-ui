@@ -32,8 +32,14 @@ To run the API and UI together, use `docker compose up --build` in the parent `p
 ## Verify
 
 ```bash
-npm run verify   # lint, format check, translation key parity, unit tests, production build
+npm run verify        # lint, format check, translation key parity, unit tests, production build
+npm run e2e           # Playwright smoke against the fake API (360×800, es/en × light/dark, + WebKit)
+npm run e2e:screens   # every player screen in demo and worst-case data → e2e/screenshots/
 ```
+
+First run: `npx playwright install chromium webkit`.
+
+With `npm run start:fake`, open `/play/mde?dev` for a toolbar that switches the player screen between live play and fixed screens with demo or worst-case data.
 
 ## Configuration
 

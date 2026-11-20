@@ -1,0 +1,70 @@
+@if (reasonMessage(); as message) {
+  <pb-inline-message tone="warning">
+    {{ message.key | transloco: message.params }}
+    @if (reason() === 'PLAYER_KICKED') {
+      {{ 'player.join.kickedHint' | transloco }}
+    }
+  </pb-inline-message>
+}
+
+<section class="window">
+  <p class="window-bar">~/{{ cityCode() }}/{{ 'player.join.file' | transloco }}</p>
+  <div class="window-body">
+    <h2 class="heading">
+      {{ 'player.join.heading' | transloco: { city: cityName() ?? cityCode() } }}
+    </h2>
+    <form class="form" novalidate (submit)="onSubmit($event)">
+      <div class="field">
+        <label class="field-label" [for]="ids.input">{{
+          'player.join.nicknameLabel' | transloco
+        }}</label>
+        <p class="field-hint" [id]="ids.hint">
+          {{ 'player.join.nicknameHint' | transloco: { min: 3, max: 16 } }}
+        </p>
+        <input
+          #nickname
+          class="text-input"
+          type="text"
+          [id]="ids.input"
+          [formField]="joinForm.nickname"
+          autocomplete="nickname"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="go"
+          [attr.aria-describedby]="describedBy()"
+          [attr.aria-invalid]="fieldError() ? 'true' : 'false'"
+          (blur)="onBlur()"
+        />
+        @if (fieldError(); as error) {
+          <p class="field-error" [id]="ids.error">
+            <pb-icon name="circle-alert" />
+            <span
+              ><span class="visually-hidden">{{ 'common.errorPrefix' | transloco }}</span
+              >{{ error.key | transloco: error.params }}</span
+            >
+          </p>
+        }
+      </div>
+
+      <p class="privacy" [id]="ids.privacy">
+        <pb-icon name="info" />
+        <span>{{ 'player.join.privacy' | transloco }}</span>
+      </p>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [attr.aria-disabled]="joining() ? 'true' : null"
+      >
+        {{ (joining() ? 'player.join.submitting' : 'player.join.submit') | transloco }}
+      </button>
+
+      @if (requestMessage(); as message) {
+        <pb-inline-message tone="danger">
+          {{ message.key | transloco: message.params }}
+        </pb-inline-message>
+      }
+    </form>
+  </div>
+</section>

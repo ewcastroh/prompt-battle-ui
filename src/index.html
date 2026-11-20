@@ -3,15 +3,37 @@
   <head>
     <meta charset="utf-8" />
     <meta name="color-scheme" content="light dark" />
+    <!-- Status bar / browser chrome color = the header surface, per scheme (mobile-native §10). -->
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+      data-scheme="light"
+    />
+    <meta
+      name="theme-color"
+      content="#161b22"
+      media="(prefers-color-scheme: dark)"
+      data-scheme="dark"
+    />
     <script>
       try {
-        document.querySelector('meta[name="color-scheme"]').content =
-          localStorage.getItem('color-scheme') ?? 'light dark';
+        var stored = localStorage.getItem('color-scheme');
+        document.querySelector('meta[name="color-scheme"]').content = stored ?? 'light dark';
+        // A stored override also picks the matching theme-color (ThemeService keeps this in sync).
+        if (stored === 'light' || stored === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"][data-scheme]').forEach(function (m) {
+            m.media = m.dataset.scheme === stored ? 'all' : 'not all';
+          });
+        }
       } catch {}
     </script>
     <title>Prompt Battle</title>
     <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <meta name="text-scale" content="scale" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link

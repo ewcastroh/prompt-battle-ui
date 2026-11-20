@@ -1,12 +1,17 @@
 {
   "app": {
     "brand": "prompt-battle",
+    "name": "Prompt Battle",
     "eventTitle": "Prompt Battle: Compile Your Imagination!"
   },
   "boot": {
     "title": "We couldn't load Prompt Battle",
     "message": "Check your connection and try again.",
     "retry": "Try again"
+  },
+  "common": {
+    "errorPrefix": "Error: ",
+    "warningPrefix": "Warning: "
   },
   "settings": {
     "open": "Open settings",
@@ -23,6 +28,9 @@
     "theme": "Theme",
     "switchToDark": "Switch to dark theme",
     "switchToLight": "Switch to light theme"
+  },
+  "imageDialog": {
+    "close": "Close"
   },
   "shell": {
     "statusLanguage": "lang: {{lang}}",
@@ -42,9 +50,169 @@
     "loading": "Loading cities…"
   },
   "player": {
-    "title": "Play",
-    "heading": "Player screen",
-    "placeholder": "This is where you'll write your prompt and see your images. Coming soon."
+    "loading": "Loading your game…",
+    "title": {
+      "loading": "Loading",
+      "lobby": "Hi, {{nickname}}",
+      "roundOpen": "Round open",
+      "roundClosed": "Round closed!",
+      "practiceClosed": "Practice over!",
+      "waiting": {
+        "ROUND_SCORED": "Round scored",
+        "MINI_PODIUM": "Round top 3",
+        "FINAL_SCORING": "Preparing the podium",
+        "PODIUM_REVEAL": "Podium live!",
+        "FINISHED": "Podium live!"
+      },
+      "final": "Your final result"
+    },
+    "docTitle": {
+      "loading": "Loading",
+      "join": "Join",
+      "lobby": "Waiting room",
+      "round-open": "Round open",
+      "round-closed": "Round closed",
+      "waiting": "Results on screen",
+      "final": "Your result"
+    },
+    "announce": {
+      "lobby": "You're in the waiting room. Wait for the round to start.",
+      "roundOpen": "The round has started!",
+      "roundClosed": "Round closed! The AI is scoring.",
+      "practiceClosed": "The practice round is over.",
+      "final": "Your final result is ready.",
+      "lastMinute": "One minute left."
+    },
+    "connection": {
+      "lost": "No connection to the game. Retrying…",
+      "restored": "Connection restored.",
+      "retry": "Retry now",
+      "dismiss": "Close connection notice"
+    },
+    "join": {
+      "file": "join.sh",
+      "heading": "Join the game in {{city}}",
+      "nicknameLabel": "Your nickname",
+      "nicknameHint": "{{min}}–{{max}} characters: letters, digits, spaces, _ or -.",
+      "privacy": "Use an alias. Don't write personal data. Your prompts are sent to third-party AI services to generate and evaluate images.",
+      "submit": "Join",
+      "submitting": "Joining…",
+      "errorRequired": "Type a nickname to join.",
+      "kickedHint": "If it was a mistake, you can join again with another nickname."
+    },
+    "lobby": {
+      "file": "lobby.txt",
+      "claimLabel": "Your code",
+      "claimHint": "Keep it: if you make the podium, you'll show it to claim your prize.",
+      "wait": "Wait for the round to start",
+      "waitDetail": "This screen changes by itself when it starts. Meanwhile, watch the projector."
+    },
+    "round": {
+      "timeLeft": "Time left:",
+      "lastMinute": "Last minute!",
+      "timeUp": "Time's up!",
+      "practiceBadge": "Practice round.",
+      "practiceNote": "It doesn't count toward the score.",
+      "target": {
+        "heading": "Target image",
+        "alt": "Target image: {{name}}",
+        "zoomHint": "Tap to enlarge",
+        "dialogTitle": "Target: {{name}}"
+      },
+      "editor": {
+        "file": "prompt.txt",
+        "label": "Describe the image",
+        "placeholder": "E.g. a colorful chiva bus in the rain, at night",
+        "counterLabel": "Characters:",
+        "counter": "{{count}} / {{max}}",
+        "counterLeft": "{{count}} left",
+        "counterFull": "limit reached",
+        "attemptsLeft": "Attempts left: {{count}}",
+        "required": "Write a prompt to generate.",
+        "duplicate": "You already generated this exact prompt: with the round's seed it would give the same image. Change something to try another.",
+        "duplicateOf": "It's the same prompt as attempt {{number}}: it would give the same image. Change something to generate another."
+      },
+      "generate": {
+        "label": "Generate",
+        "sending": "Sending…",
+        "busy": "Wait for your image to finish before generating another one.",
+        "noAttempts": "You've used all {{max}} attempts. Pick below the image you want to submit.",
+        "dismissError": "Close the Generate error"
+      },
+      "status": {
+        "idle": "Ready to compile your prompt",
+        "queued": "Queued · position {{position}}",
+        "queuedWaiting": "Queued…",
+        "generating": "Compiling image…",
+        "done": "Attempt {{number}} ready",
+        "blocked": "Attempt {{number}} blocked: try another idea",
+        "failed": "Attempt {{number}} failed: it didn't use an attempt",
+        "late": "Attempt {{number}} arrived late: it didn't use an attempt"
+      },
+      "announce": {
+        "queued": "Your prompt is queued, position {{position}}.",
+        "queuedWaiting": "Your prompt is queued.",
+        "generating": "Compiling your image.",
+        "done": "Attempt {{number}} is ready.",
+        "blocked": "Your prompt was blocked. Try another idea; it didn't use an attempt.",
+        "failed": "We couldn't generate the image. It didn't use an attempt; try again.",
+        "late": "The image finished after the round closed and doesn't count."
+      },
+      "gallery": {
+        "heading": "Your attempts",
+        "empty": "No images yet. Write a prompt and press Generate.",
+        "autoEntry": "Pick the one you want to submit. If you don't, we'll submit your latest image.",
+        "changeHint": "You can change your choice until the round closes."
+      },
+      "attempt": {
+        "title": "Attempt {{number}}",
+        "zoom": "Enlarge attempt {{number}}",
+        "imageAlt": "Image generated in attempt {{number}}",
+        "promptLabel": "Prompt",
+        "submit": "Submit this one",
+        "selected": "Selected",
+        "context": "(attempt {{number}})",
+        "selectedAnnounce": "You picked attempt {{number}}. You can change it until the round closes.",
+        "notCounted": "It didn't use an attempt.",
+        "lateMessage": "It finished after the round closed, so it doesn't count.",
+        "dismissError": "Close the error for attempt {{number}}",
+        "status": {
+          "queued": "Queued · position {{position}}",
+          "queuedWaiting": "Queued…",
+          "generating": "Compiling…",
+          "done": "Ready",
+          "blocked": "Blocked",
+          "failed": "Failed",
+          "late": "Arrived late"
+        }
+      }
+    },
+    "closed": {
+      "file": "scoring.log",
+      "scoring": "The AI is scoring…",
+      "practice": "That was the practice round: it doesn't count toward the score. Get ready for the next one!",
+      "grace": "Your image was already on its way: if it finishes in the next few seconds, it counts.",
+      "entryHeading": "Your submitted image",
+      "noEntry": "You didn't submit an image this round."
+    },
+    "waiting": {
+      "file": "results.txt",
+      "scored": "The AI has finished scoring. Watch the screen: what's next is coming soon.",
+      "mini": "Watch the screen: this round's top 3 is being revealed.",
+      "finalScoring": "The AI is preparing the final podium…",
+      "podium": "Watch the screen: the top 5 of {{city}} is being revealed. Your result will show up here at the end.",
+      "stayHere": "Keep this screen open: it updates by itself."
+    },
+    "final": {
+      "file": "result.txt",
+      "podium": "You're on the podium! Show your code {{claimCode}}",
+      "rankLabel": "Your rank in {{city}}",
+      "rank": "#{{rank}}",
+      "totalLabel": "Total score",
+      "total": "{{total}} points",
+      "noRank": "You didn't submit any images this time, so you have no rank.",
+      "thanks": "Thanks for playing!"
+    }
   },
   "stage": {
     "title": "Stage",
@@ -87,7 +255,7 @@
     "PROVIDER_NOT_FOUND": "Provider “{{providerId}}” doesn't exist or has no key.",
     "PROVIDER_UNAVAILABLE": "No image provider is available right now. Try again in a moment.",
     "ROUND_NOT_READY": "This round's calibration isn't ready yet.",
-    "UPLOAD_INVALID": "Upload a JPEG, PNG or WebP image up to {{maxMb}} MB.",
+    "UPLOAD_INVALID": "Upload a JPEG or PNG image up to {{maxMb}} MB.",
     "VALIDATION_FAILED": "Check the “{{field}}” field.",
     "SCORING_FAILED": "You can only rescore a round whose scoring failed.",
     "NOT_FOUND": "We couldn't find this page.",

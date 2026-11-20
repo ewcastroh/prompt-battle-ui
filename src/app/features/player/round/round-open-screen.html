@@ -1,0 +1,78 @@
+<div class="round-bar">
+  <pb-countdown
+    [endsAt]="round().endsAt"
+    [serverOffset]="serverOffset()"
+    (lastMinuteStarted)="onLastMinute()"
+  />
+  @if (!round().scored) {
+    <p class="practice">
+      <pb-icon name="info" />
+      <span
+        ><strong>{{ 'player.round.practiceBadge' | transloco }}</strong>
+        {{ 'player.round.practiceNote' | transloco }}</span
+      >
+    </p>
+  }
+</div>
+
+<section class="target">
+  <h2 class="section-label">{{ 'player.round.target.heading' | transloco }}</h2>
+  <pb-target-image
+    [roundName]="round().name"
+    [imageUrl]="round().targetUrl"
+    [thumbUrl]="round().targetThumbUrl"
+  />
+</section>
+
+<form class="compose" novalidate (submit)="onGenerate($event)">
+  <pb-prompt-editor
+    [field]="promptForm.prompt"
+    [attemptsLeft]="round().attemptsLeft"
+    [error]="editorError()"
+    [notice]="editorNotice()"
+  />
+  <pb-generate-button [reason]="generateReason()" [sending]="sending()" />
+  @if (requestMessage(); as message) {
+    <pb-inline-message
+      tone="danger"
+      [dismissLabel]="'player.round.generate.dismissError' | transloco"
+      (dismissed)="dismissRequestError()"
+    >
+      {{ message.key | transloco: message.params }}
+    </pb-inline-message>
+  }
+  <pb-generation-status
+    [generation]="generation()"
+    [latest]="latest()"
+    [latestNumber]="attempts().length"
+  />
+</form>
+
+<section class="gallery">
+  <h2 class="section-title">{{ 'player.round.gallery.heading' | transloco }}</h2>
+  @if (attempts().length === 0) {
+    <p class="hint">{{ 'player.round.gallery.empty' | transloco }}</p>
+  } @else {
+    <p class="hint">
+      {{
+        (entryAttemptId() ? 'player.round.gallery.changeHint' : 'player.round.gallery.autoEntry')
+          | transloco
+      }}
+    </p>
+    <ol class="cards" role="list">
+      @for (attempt of attempts(); track attempt.id; let i = $index) {
+        <li>
+          <pb-attempt-card
+            [attempt]="attempt"
+            [number]="i + 1"
+            [selected]="attempt.id === entryAttemptId()"
+            [selectable]="true"
+            [error]="selectError()?.attemptId === attempt.id ? selectError()!.message : null"
+            (selectRequested)="onSelect(attempt, i + 1)"
+            (errorDismissed)="dismissSelectError()"
+          />
+        </li>
+      }
+    </ol>
+  }
+</section>
