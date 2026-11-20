@@ -1,0 +1,120 @@
+@layer components {
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .round {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+  }
+
+  .round-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+  }
+
+  .facts dt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .clock {
+    font-size: var(--text-xl);
+    color: var(--syntax-function);
+  }
+
+  .clock.warn {
+    color: var(--color-warning);
+  }
+
+  .cue {
+    margin-inline-start: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    font-weight: 700;
+  }
+
+  .status-OPEN {
+    color: var(--color-info);
+  }
+
+  .status-SCORED,
+  .status-CLOSED {
+    color: var(--color-success);
+  }
+
+  .status-CLOSING,
+  .status-SCORING {
+    color: var(--color-warning);
+  }
+
+  .status-SCORING_FAILED {
+    color: var(--color-danger);
+  }
+
+  .preparing {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+    font-weight: 700;
+  }
+
+  /* The podium "Next" (SPEC §10.6: large): full width, tall, the page's main action. */
+  .next {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .btn-next {
+    inline-size: 100%;
+    min-block-size: 4.5rem;
+    font-size: var(--text-xl);
+    justify-content: flex-start;
+    padding-inline: var(--space-6);
+    text-align: start;
+  }
+
+  .btn-next pb-icon {
+    --icon-size: 1.25em;
+  }
+
+  .next-what {
+    display: block;
+    font-size: var(--text-md);
+    font-weight: 600;
+  }
+
+  .admin-table pb-icon {
+    --icon-size: 1em;
+  }
+
+  td .badge + .badge {
+    margin-inline-start: var(--space-1);
+  }
+}

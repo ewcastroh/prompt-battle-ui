@@ -9,6 +9,7 @@ import {
   Me,
   SelectEntryRequest,
 } from '../../core/api/api.models';
+import { parseHttpDate } from '../../core/time/server-clock';
 
 /** Requests that hang on venue Wi-Fi fail after this, so polling can back off and retry. */
 export const REQUEST_TIMEOUT_MS = 10_000;
@@ -101,13 +102,4 @@ export class PlayerApi {
 
 function auth(token: string): HttpHeaders {
   return new HttpHeaders({ Authorization: `Bearer ${token}` });
-}
-
-/** Parses an HTTP-date (`Wed, 02 Dec 2026 15:04:05 GMT`) to epoch ms, or `null`. */
-export function parseHttpDate(value: string | null): number | null {
-  if (!value) {
-    return null;
-  }
-  const ms = Date.parse(value);
-  return Number.isNaN(ms) ? null : ms;
 }

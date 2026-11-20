@@ -56,6 +56,10 @@ const CLAIM_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 // Same rules as the API (NicknameRules, PromptRules): NFC, letters/marks/digits, code points.
 const NICKNAME_RE = /^[\p{L}\p{M}\p{Nd} _-]+$/u;
 const BLOCKLIST = ['badword', 'groseria'];
+const LONG_COMMENTARY = {
+  es: '¡Qué maravilla de composición! La luz, los colores y cada detalle se parecen muchísimo al objetivo original de esta ronda.',
+  en: 'What a wonderful composition! The light, the colors and every single detail look remarkably close to this round’s original target.',
+};
 
 interface FakePlayer {
   id: string;
@@ -137,6 +141,10 @@ export class FakeApi {
   private readonly previews = new Map<string, { seed: number; imageUrl: string }>();
   private activeProvider = 'fal';
   private seq = 0;
+  /** Dev scenes: keep transient phases (closing, final scoring) until released. */
+  hold = false;
+  /** Dev scenes: commentary of the longest allowed shape (20 words per language, SPEC §4.4). */
+  longCommentary = false;
 
   constructor(private readonly now: () => number = () => Date.now()) {
     for (const city of [
@@ -702,6 +710,7 @@ export class FakeApi {
       if (city.phase === 'ROUND_OPEN' && run.endsAt !== null && now >= run.endsAt)
         this.closeRun(city, round, run.endsAt);
       if (
+        !this.hold &&
         city.phase === 'ROUND_CLOSING' &&
         run.closedAt !== null &&
         now >= run.closedAt + CLOSING_MS
@@ -721,6 +730,7 @@ export class FakeApi {
       }
     }
     if (
+      !this.hold &&
       city.phase === 'FINAL_SCORING' &&
       city.finalScoringAt !== null &&
       now >= city.finalScoringAt + FINAL_SCORING_MS
@@ -914,8 +924,9 @@ export class FakeApi {
       roundName: round.name,
       roundScore: score,
       total,
-      commentary:
-        score >= 70
+      commentary: this.longCommentary
+        ? LONG_COMMENTARY
+        : score >= 70
           ? { es: '¡Casi idéntica al objetivo!', en: 'Nearly identical to the target!' }
           : { es: '¡Buena idea, con estilo propio!', en: 'Nice idea, with its own style!' },
     };

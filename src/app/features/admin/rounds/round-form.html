@@ -1,0 +1,316 @@
+<dialog
+  #dialog
+  class="admin-dialog round-dialog"
+  aria-labelledby="round-form-title"
+  (cancel)="onCancel($event)"
+  (close)="onClose()"
+>
+  <form class="dialog-body" novalidate (submit)="onSubmit($event)">
+    <h2 id="round-form-title" class="dialog-title">{{ titleKey() | transloco }}</h2>
+
+    <div class="field">
+      <label class="field-label" for="round-name">{{ 'admin.roundForm.name' | transloco }}</label>
+      <input
+        id="round-name"
+        class="text-input"
+        type="text"
+        [formField]="roundForm.name"
+        autocomplete="off"
+        [attr.aria-invalid]="fieldErrors().name ? 'true' : 'false'"
+        [attr.aria-describedby]="fieldErrors().name ? 'round-name-error' : null"
+        autofocus
+      />
+      @if (fieldErrors().name) {
+        <p class="field-error" id="round-name-error">
+          <pb-icon name="circle-alert" />
+          <span>{{ 'admin.roundForm.nameError' | transloco: { max: limits.name } }}</span>
+        </p>
+      }
+    </div>
+
+    <fieldset class="choice">
+      <legend class="field-label">{{ 'admin.roundForm.kind' | transloco }}</legend>
+      <label class="segment">
+        <input
+          type="radio"
+          class="segment-input"
+          name="round-kind"
+          [checked]="model().scored"
+          (change)="setScored(true)"
+        />
+        <pb-icon class="tick" name="check" />
+        <span>{{ 'admin.rounds.scored' | transloco }}</span>
+      </label>
+      <label class="segment">
+        <input
+          type="radio"
+          class="segment-input"
+          name="round-kind"
+          [checked]="!model().scored"
+          (change)="setScored(false)"
+        />
+        <pb-icon class="tick" name="check" />
+        <span>{{ 'admin.rounds.practice' | transloco }}</span>
+      </label>
+    </fieldset>
+
+    <div class="field">
+      <label class="field-label" for="round-hidden">{{
+        'admin.roundForm.hiddenPrompt' | transloco
+      }}</label>
+      <p class="field-hint" id="round-hidden-hint">
+        {{ 'admin.roundForm.hiddenPromptHint' | transloco }}
+      </p>
+      <textarea
+        id="round-hidden"
+        class="text-input"
+        rows="4"
+        [formField]="roundForm.hiddenPrompt"
+        [attr.aria-invalid]="fieldErrors().hiddenPrompt ? 'true' : 'false'"
+        [attr.aria-describedby]="
+          'round-hidden-hint' + (fieldErrors().hiddenPrompt ? ' round-hidden-error' : '')
+        "
+      ></textarea>
+      @if (fieldErrors().hiddenPrompt) {
+        <p class="field-error" id="round-hidden-error">
+          <pb-icon name="circle-alert" />
+          <span>{{
+            'admin.roundForm.hiddenPromptError' | transloco: { max: limits.hiddenPrompt }
+          }}</span>
+        </p>
+      }
+    </div>
+
+    <div class="numbers">
+      <div class="field">
+        <label class="field-label" for="round-duration">{{
+          'admin.roundForm.duration' | transloco
+        }}</label>
+        <input
+          id="round-duration"
+          class="text-input mono"
+          type="number"
+          inputmode="numeric"
+          [formField]="roundForm.durationSec"
+          [attr.aria-invalid]="fieldErrors().durationSec ? 'true' : 'false'"
+          aria-describedby="round-duration-hint"
+        />
+        <p
+          class="field-hint"
+          id="round-duration-hint"
+          [class.field-error]="fieldErrors().durationSec"
+        >
+          {{
+            'admin.roundForm.durationHint'
+              | transloco: { min: limits.durationMin, max: limits.durationMax }
+          }}
+        </p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="round-attempts">{{
+          'admin.roundForm.attempts' | transloco
+        }}</label>
+        <input
+          id="round-attempts"
+          class="text-input mono"
+          type="number"
+          inputmode="numeric"
+          [formField]="roundForm.attemptsPerPlayer"
+          [attr.aria-invalid]="fieldErrors().attemptsPerPlayer ? 'true' : 'false'"
+          aria-describedby="round-attempts-hint"
+        />
+        <p
+          class="field-hint"
+          id="round-attempts-hint"
+          [class.field-error]="fieldErrors().attemptsPerPlayer"
+        >
+          {{
+            'admin.roundForm.attemptsHint'
+              | transloco: { min: limits.attemptsMin, max: limits.attemptsMax }
+          }}
+        </p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="round-seed">{{ 'admin.roundForm.seed' | transloco }}</label>
+        <input
+          id="round-seed"
+          class="text-input mono"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          [formField]="roundForm.seed"
+          [attr.aria-invalid]="fieldErrors().seed ? 'true' : 'false'"
+          aria-describedby="round-seed-hint"
+        />
+        <p class="field-hint" id="round-seed-hint" [class.field-error]="fieldErrors().seed">
+          {{ 'admin.roundForm.seedHint' | transloco }}
+        </p>
+      </div>
+    </div>
+
+    <fieldset class="choice">
+      <legend class="field-label">{{ 'admin.roundForm.target' | transloco }}</legend>
+      @if (editing()) {
+        <label class="segment">
+          <input
+            type="radio"
+            class="segment-input"
+            name="round-source"
+            [checked]="model().source === 'keep'"
+            (change)="setSource('keep')"
+          />
+          <pb-icon class="tick" name="check" />
+          <span>{{ 'admin.roundForm.keep' | transloco }}</span>
+        </label>
+      }
+      <label class="segment">
+        <input
+          type="radio"
+          class="segment-input"
+          name="round-source"
+          [checked]="model().source === 'generate'"
+          (change)="setSource('generate')"
+        />
+        <pb-icon class="tick" name="check" />
+        <span>{{ 'admin.roundForm.generate' | transloco }}</span>
+      </label>
+      <label class="segment">
+        <input
+          type="radio"
+          class="segment-input"
+          name="round-source"
+          [checked]="model().source === 'upload'"
+          (change)="setSource('upload')"
+        />
+        <pb-icon class="tick" name="check" />
+        <span>{{ 'admin.roundForm.upload' | transloco }}</span>
+      </label>
+    </fieldset>
+
+    @switch (model().source) {
+      @case ('keep') {
+        @if (editing(); as round) {
+          <img
+            class="preview"
+            [src]="round.targetThumbUrl | apiUrl"
+            [alt]="'admin.rounds.targetAlt' | transloco: { name: round.name }"
+            width="384"
+            height="384"
+          />
+        }
+      }
+      @case ('generate') {
+        <div class="target-box">
+          <button
+            type="button"
+            class="btn"
+            [attr.aria-disabled]="generating() ? 'true' : null"
+            aria-describedby="round-generate-hint"
+            (click)="generate()"
+          >
+            <pb-icon name="sparkles" />
+            {{
+              (generating()
+                ? 'admin.roundForm.generating'
+                : preview()
+                  ? 'admin.roundForm.regenerate'
+                  : 'admin.roundForm.generateButton'
+              ) | transloco
+            }}
+          </button>
+          <p class="field-hint" id="round-generate-hint">
+            {{ 'admin.roundForm.generateHint' | transloco }}
+          </p>
+          @if (generating()) {
+            <p class="busy">
+              <pb-spinner labelledBy="round-generating" />
+              <span id="round-generating">{{ 'admin.roundForm.generating' | transloco }}</span>
+            </p>
+          } @else if (preview(); as p) {
+            <figure class="preview-figure">
+              <img
+                class="preview"
+                [src]="p.thumbUrl | apiUrl"
+                [alt]="'admin.roundForm.previewAlt' | transloco"
+                width="384"
+                height="384"
+              />
+              <figcaption class="field-hint mono">
+                {{
+                  'admin.roundForm.previewMeta'
+                    | transloco: { seed: p.seed, provider: p.provider, model: p.model }
+                }}
+              </figcaption>
+            </figure>
+          }
+        </div>
+      }
+      @case ('upload') {
+        <div class="field">
+          <label class="field-label" for="round-file">{{
+            'admin.roundForm.file' | transloco
+          }}</label>
+          <input
+            id="round-file"
+            class="file-input"
+            type="file"
+            accept="image/jpeg,image/png"
+            aria-describedby="round-file-hint"
+            (change)="onFile($event)"
+          />
+          <p class="field-hint" id="round-file-hint">
+            {{ 'admin.roundForm.fileHint' | transloco: { maxMb: limits.uploadMb } }}
+          </p>
+        </div>
+      }
+    }
+
+    @if (targetError(); as key) {
+      <p class="field-error target-error" tabindex="-1">
+        <pb-icon name="circle-alert" />
+        <span>{{ key | transloco: { maxMb: limits.uploadMb } }}</span>
+      </p>
+    }
+    @if (requestError(); as message) {
+      <p class="field-error" role="alert">
+        <pb-icon name="circle-alert" />
+        <span>{{ message.key | transloco: message.params }}</span>
+      </p>
+    }
+    @if (confirmDiscard()) {
+      <p class="field-error" role="alert">
+        <pb-icon name="triangle-alert" />
+        <span>{{ 'admin.roundForm.unsaved' | transloco }}</span>
+      </p>
+    }
+
+    <div class="dialog-actions">
+      @if (confirmDiscard()) {
+        <button type="button" class="btn btn-danger" (click)="close()">
+          {{ 'admin.roundForm.discard' | transloco }}
+        </button>
+      }
+      <button
+        type="button"
+        class="btn"
+        (click)="confirmDiscard() || !roundForm().dirty() ? close() : confirmDiscard.set(true)"
+      >
+        {{ 'admin.confirm.cancel' | transloco }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [attr.aria-disabled]="saving() || generating() ? 'true' : null"
+      >
+        {{
+          (saving()
+            ? 'admin.working'
+            : editing()
+              ? 'admin.roundForm.save'
+              : 'admin.roundForm.create'
+          ) | transloco
+        }}
+      </button>
+    </div>
+  </form>
+</dialog>

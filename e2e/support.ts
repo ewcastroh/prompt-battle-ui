@@ -98,10 +98,18 @@ export async function checkScreen(page: Page): Promise<void> {
 
 // ------------------------------------------------------------------ fake backend hook
 
+interface FakeResponse {
+  status: number;
+  body: unknown;
+}
+
 interface FakeHook {
+  admin(city: string, method: string, path: string, body?: unknown): FakeResponse;
   startRound(city: string, options?: { scored?: boolean }): string;
   closeRound(city: string): void;
   setOffline(offline: boolean): void;
+  advance(ms: number): void;
+  hold(on: boolean): void;
 }
 
 declare global {
@@ -129,3 +137,57 @@ export function setOffline(page: Page, offline: boolean): Promise<void> {
 export function screenHeading(page: Page) {
   return page.locator('#player-title');
 }
+
+/** Calls an admin endpoint of the page's fake API as the city's admin (stage tests). */
+export async function fakeAdmin<T = unknown>(
+  page: Page,
+  city: string,
+  method: string,
+  path: string,
+  body: unknown = null,
+): Promise<T> {
+  const response = await page.evaluate(([c, m, p, b]) => window.__pbFake.admin(c, m, p, b), [
+    city,
+    method,
+    path,
+    body,
+  ] as const);
+  expect(response.status, `${method} ${path}`).toBeLessThan(400);
+  return response.body as T;
+}
+
+/** Moves the fake server clock forward (generations, timers and scoring are time-based). */
+export function advanceFake(page: Page, ms: number): Promise<void> {
+  return page.evaluate((value) => window.__pbFake.advance(value), ms);
+}
+
+/** The stage is one screen: nothing scrolls in either direction (SPEC §10.5). */
+export async function expectFitsScreen(page: Page): Promise<void> {
+  const size = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    scrollHeight: document.documentElement.scrollHeight,
+    width: innerWidth,
+    height: innerHeight,
+  }));
+  expect(size.scrollWidth, 'stage wider than the screen').toBeLessThanOrEqual(size.width);
+  expect(size.scrollHeight, 'stage taller than the screen').toBeLessThanOrEqual(size.height);
+  // Cells that clip (StageAutoFit's `.fit-watch`) must not hide content either.
+  const clipped = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLElement>('.fit-watch')]
+      .filter((cell) => cell.scrollHeight > cell.clientHeight + 1)
+      .map((cell) => `${cell.className}: ${cell.scrollHeight} > ${cell.clientHeight}`),
+  );
+  expect(clipped, 'stage cells with clipped content').toEqual([]);
+}
+
+/** Every stage size the spec names (SPEC §10.5). */
+export const STAGE_SIZES = [
+  { width: 1920, height: 1080 },
+  { width: 1280, height: 720 },
+] as const;
+
+/** Fake admin tokens (fake backend only; not secrets). */
+export const FAKE_ADMIN_TOKEN = {
+  mde: 'fake-admin-token-mde-0123456789',
+  bog: 'fake-admin-token-bog-0123456789',
+} as const;

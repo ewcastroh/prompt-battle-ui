@@ -1,0 +1,49 @@
+<pb-app-header [title]="heading()" [cityName]="cityName()" titleId="admin-title" />
+<main class="admin">
+  @switch (session.session().kind) {
+    @case ('ready') {
+      <nav class="section-nav" [attr.aria-label]="'admin.nav.label' | transloco">
+        <ul class="nav-links">
+          @for (id of sections; track id) {
+            <li>
+              <a class="nav-link" [href]="'#admin-' + id">{{ 'admin.nav.' + id | transloco }}</a>
+            </li>
+          }
+        </ul>
+        <button type="button" class="btn btn-small logout" (click)="logout()">
+          <pb-icon name="log-out" />
+          {{ 'admin.logout' | transloco }}
+        </button>
+      </nav>
+
+      @if (live.offline()) {
+        <pb-inline-message tone="warning">{{ 'admin.offline' | transloco }}</pb-inline-message>
+      }
+
+      <div class="layout">
+        <div class="col">
+          <pb-admin-control id="admin-control" class="admin-section" />
+          <pb-admin-rounds id="admin-rounds" class="admin-section" />
+          <pb-admin-players id="admin-players" class="admin-section" />
+          <pb-admin-entries id="admin-entries" class="admin-section" />
+        </div>
+        <div class="col side">
+          <pb-admin-providers id="admin-providers" class="admin-section" />
+          <pb-admin-alerts id="admin-alerts" class="admin-section" />
+          <pb-admin-event id="admin-event" class="admin-section" />
+        </div>
+      </div>
+    }
+    @case ('login') {
+      <pb-admin-login [cityCode]="city()" [cityName]="cityName()" />
+    }
+    @default {
+      <div class="checking">
+        <pb-spinner labelledBy="admin-checking" />
+        <p id="admin-checking">
+          {{ (retrying() ? 'admin.checkingRetry' : 'admin.checking') | transloco }}
+        </p>
+      </div>
+    }
+  }
+</main>

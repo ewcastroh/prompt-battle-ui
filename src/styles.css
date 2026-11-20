@@ -9,4 +9,6 @@
 @import './styles/tokens.css' layer(tokens);
 @import './styles/base.css' layer(base);
 @import './styles/components.css' layer(components);
+@import './styles/stage.css' layer(components);
+@import './styles/admin.css' layer(components);
 @import './styles/utilities.css' layer(utilities);

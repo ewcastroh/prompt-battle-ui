@@ -14,7 +14,7 @@ import { runScreenTransition } from '../../core/ui/screen-transition';
 import { PlayerApi } from './player-api';
 import { JoinReason, PlayerScreen, PlayerSession, screenFor } from './player-screen';
 import { PlayerTokenStore } from './player-token-store';
-import { ServerClock } from './server-clock';
+import { ServerClock } from '../../core/time/server-clock';
 
 /** At most one `GET /api/me` per 1.5 s (SPEC §13, D-008). */
 export const POLL_INTERVAL_MS = 1500;

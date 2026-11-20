@@ -60,6 +60,9 @@
   --syntax-function: var(--color-info);
   --syntax-comment: var(--color-text-muted);
 
+  /* A QR code must stay dark-on-light in both themes, so its quiet zone is always paper. */
+  --color-qr-bg: var(--palette-surface-light);
+
   /* Browser UI */
   --color-scrollbar-thumb: var(--color-border-strong);
   --color-scrollbar-track: var(--color-bg);

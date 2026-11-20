@@ -1,0 +1,69 @@
+<pb-app-header variant="stage" [title]="heading()" [cityName]="cityName()" titleId="stage-title" />
+<main class="stage" [attr.data-scene]="stage.scene()">
+  <p class="statusbar">
+    <span class="brand">{{ 'app.brand' | transloco }}</span>
+    <span aria-hidden="true">/</span>
+    <span class="city">{{ cityName() }}</span>
+    @if (stage.state(); as state) {
+      <span class="phase">// {{ 'stage.phase.' + state.phase | transloco }}</span>
+    }
+    @if (stage.offline()) {
+      <span class="offline">
+        <pb-icon name="wifi-off" />
+        {{ 'stage.offline' | transloco }}
+      </span>
+    }
+  </p>
+
+  <div class="scene-box" pbStageAutoFit>
+    @if (error(); as message) {
+      <div class="scene stage-center">
+        <h2 class="stage-title">{{ message.key | transloco: message.params }}</h2>
+      </div>
+    } @else if (stage.state(); as state) {
+      @switch (stage.scene()) {
+        @case ('lobby') {
+          <pb-stage-lobby class="scene" [state]="state" />
+        }
+        @case ('gallery') {
+          <pb-stage-gallery class="scene" [items]="state.practiceGallery ?? []" />
+        }
+        @case ('round-open') {
+          <pb-stage-round
+            class="scene"
+            [round]="state.round!"
+            [playersCount]="state.playersCount"
+            [serverOffset]="stage.serverOffset()"
+          />
+        }
+        @case ('closing') {
+          <pb-stage-wait class="scene" [state]="state" kind="closing" />
+        }
+        @case ('scored') {
+          <pb-stage-wait class="scene" [state]="state" kind="scored" />
+        }
+        @case ('final-scoring') {
+          <pb-stage-wait class="scene" [state]="state" kind="final-scoring" />
+        }
+        @case ('reveal') {
+          <pb-stage-reveal
+            class="scene"
+            [reveal]="state.reveal!"
+            [runKey]="state.city.code + ':' + (state.reveal!.roundId ?? 'final')"
+          />
+        }
+        @case ('finished') {
+          <pb-stage-finished class="scene" [state]="state" />
+        }
+        @default {
+          <div class="scene stage-center"><pb-spinner [label]="'stage.loading' | transloco" /></div>
+        }
+      }
+    } @else {
+      <div class="scene stage-center">
+        <pb-spinner labelledBy="stage-loading" />
+        <p id="stage-loading" class="stage-text">{{ 'stage.loading' | transloco }}</p>
+      </div>
+    }
+  </div>
+</main>

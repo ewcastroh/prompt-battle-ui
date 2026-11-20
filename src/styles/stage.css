@@ -1,0 +1,147 @@
+/*
+ * Stage (projector) primitives, SPEC §10.5 and DESIGN.md §6: 1920×1080 and 1280×720, readable from
+ * the back of a room, so no text below --text-xl. Every scene fits one screen: image cells are size
+ * containers and pictures take the room left over by the text (min of the cell's width and height).
+ */
+
+.stage-text {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: 1.35;
+}
+
+.stage-muted {
+  color: var(--color-text-muted);
+}
+
+.stage-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  font-size: var(--text-xl);
+  line-height: 1.3;
+  color: var(--syntax-comment);
+}
+
+.stage-title {
+  margin: 0;
+  font-size: var(--text-stage-title);
+  line-height: 1.1;
+}
+
+.stage-hero {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  font-size: var(--text-stage-hero);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A cell whose square picture fills the space it gets (container query units). */
+.stage-fit {
+  container-type: size;
+  display: grid;
+  place-items: center;
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+.stage-square {
+  position: relative;
+  display: grid;
+  margin: 0;
+  inline-size: min(100cqi, 100cqb);
+}
+
+.stage-square > img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+/* A short tag over the picture's corner, so captions never cost the picture height. */
+.stage-square > figcaption {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  max-inline-size: calc(100% - 2 * var(--space-2));
+  padding: 0 var(--space-2);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+/* Caption under the picture (the gallery's nicknames can be long): room for about two lines. */
+.stage-square.caption-below {
+  gap: var(--space-1);
+  inline-size: min(100cqi, 100cqb - 4.5rem);
+}
+
+.stage-square.caption-below > figcaption {
+  position: static;
+  max-inline-size: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  order: 1;
+}
+
+/* Two pictures side by side (target and entry), each as large as the cell allows. */
+.stage-pair {
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+.stage-pair > .stage-square {
+  inline-size: min((100cqi - var(--space-6)) / 2, 100cqb);
+}
+
+/* "Thinking" scenes (closing, scoring): one centered message. */
+.stage-center {
+  display: grid;
+  align-content: safe center;
+  justify-items: center;
+  gap: var(--space-8);
+  text-align: center;
+}
+
+.stage-center > * {
+  max-inline-size: 30ch;
+}
+
+.stage-center pb-spinner {
+  --spinner-size: clamp(5rem, 3rem + 6vw, 10rem);
+  --spinner-thickness: clamp(0.5rem, 0.3rem + 0.5vw, 0.875rem);
+}
+
+/*
+ * User text that may be long (prompts, commentary, round names, nicknames, hidden prompts) shrinks
+ * with the scene's --stage-fit (StageAutoFit) only when the scene would not fit, never below 1.5rem
+ * (D-026, the one exception to the --text-xl floor).
+ */
+.fit-text {
+  font-size: max(1.5rem, var(--text-xl) * var(--stage-fit, 1));
+}
+
+.fit-title {
+  font-size: max(var(--text-xl), var(--text-stage-title) * var(--stage-fit, 1));
+}
+
+/* A cell StageAutoFit also measures; it clips, so its scrollHeight is its content height. */
+.fit-watch {
+  overflow: hidden;
+}

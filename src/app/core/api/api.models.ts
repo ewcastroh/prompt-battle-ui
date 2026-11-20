@@ -330,7 +330,8 @@ export interface ImageProviderStatus {
   id: string;
   model: string;
   configured: boolean;
-  circuit: CircuitState;
+  /** `null` for a provider without a key (API.md §7). */
+  circuit: CircuitState | null;
   inFlight: number;
   maxConcurrency: number;
   p50Ms: number | null;
@@ -345,7 +346,8 @@ export interface EmbeddingProviderStatus {
   model: string;
   configured: boolean;
   healthy: boolean;
-  determinism: { maxDiff: number; averaging: boolean; checkedAt: Iso8601 } | null;
+  /** Fields are `null` (and `averaging` false) until the first probe. */
+  determinism: { maxDiff: number | null; averaging: boolean; checkedAt: Iso8601 | null } | null;
 }
 
 export interface Providers {
@@ -363,7 +365,8 @@ export interface ProbeResult {
   providerId: string;
   model: string;
   ok: boolean;
-  latencyMs: number;
+  /** `null` for a `NOT_CONFIGURED` commentary row. */
+  latencyMs: number | null;
   errorKind: string | null;
   determinismMaxDiff: number | null;
 }

@@ -1,0 +1,134 @@
+@layer components {
+  .round-dialog {
+    inline-size: min(100% - 2 * var(--space-4), 44rem);
+  }
+
+  .choice {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .choice legend {
+    inline-size: 100%;
+    margin-block-end: var(--space-1);
+    padding: 0;
+  }
+
+  /* Segmented choice, like the settings menu: the label is the visual; the native radio covers it
+     (transparent), so it stays focusable, announced and a full 44 px target. */
+  .segment {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--tap-target);
+    padding-inline: var(--space-3);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Over the border too, so the target is the full 44 px box. */
+  .segment-input {
+    position: absolute;
+    inset: calc(-1 * var(--border-width));
+    inline-size: calc(100% + 2 * var(--border-width));
+    block-size: calc(100% + 2 * var(--border-width));
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .segment .tick {
+    display: none;
+  }
+
+  .segment:has(.segment-input:checked) {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+
+  .segment:has(.segment-input:checked) .tick {
+    display: inline-flex;
+  }
+
+  .segment:has(.segment-input:focus-visible) {
+    outline: var(--focus-width) solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (forced-colors: active) {
+    .segment:has(.segment-input:checked) {
+      border-color: Highlight;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+
+  .numbers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    gap: var(--space-4);
+  }
+
+  .numbers .field-hint.field-error {
+    color: var(--color-danger);
+    font-weight: 700;
+  }
+
+  .target-box {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2);
+  }
+
+  .busy {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .preview-figure {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+  }
+
+  .preview {
+    inline-size: min(100%, 16rem);
+    block-size: auto;
+    aspect-ratio: 1;
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    object-fit: cover;
+  }
+
+  .file-input {
+    min-block-size: var(--tap-target);
+    max-inline-size: 100%;
+  }
+
+  .file-input::file-selector-button {
+    min-block-size: var(--tap-target);
+    margin-inline-end: var(--space-3);
+    padding-inline: var(--space-4);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .target-error:focus {
+    outline: var(--focus-width) solid var(--color-focus);
+  }
+}

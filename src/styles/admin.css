@@ -1,0 +1,246 @@
+/*
+ * Admin console primitives (SPEC §10.6, DESIGN.md §7 "Admin tables"): sections, tables, badges,
+ * dialogs and the danger button. Laptop and phone (360 px): tables scroll inside a focusable named
+ * region, never the page.
+ */
+
+/* ---------- Sections ---------- */
+
+.admin-section {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  /* Clear of the sticky section bar when jumped to. */
+  scroll-margin-block-start: 4.5rem;
+}
+
+.admin-section > * {
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.section-head > h2 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.admin-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Tables (modern-web-guidance `responsive-table`) ---------- */
+
+.table-region {
+  /* Contains absolutely positioned descendants (visually hidden labels), so they scroll with the
+     table instead of widening the page. */
+  position: relative;
+  max-inline-size: 100%;
+  overflow: auto;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.admin-table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-table caption {
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  font-weight: 700;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: var(--space-2) var(--space-3);
+  border-block-end: var(--border-width) solid var(--color-border);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.admin-table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+  background-color: var(--color-surface-raised);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.admin-table tbody tr:last-child > * {
+  border-block-end: 0;
+}
+
+.admin-table .num {
+  text-align: end;
+  font-family: var(--font-mono);
+  font-size-adjust: from-font;
+  white-space: nowrap;
+}
+
+.admin-table .actions,
+.admin-table .nowrap {
+  white-space: nowrap;
+}
+
+/* Nicknames wrap at word boundaries first; a column never squeezes them to a few letters. */
+.admin-table tbody th.user-text {
+  min-inline-size: 8rem;
+  overflow-wrap: break-word;
+}
+
+.admin-table .actions .btn + .btn {
+  margin-inline-start: var(--space-2);
+}
+
+.admin-table tr.muted > * {
+  color: var(--color-text-muted);
+}
+
+.thumb {
+  display: block;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-bg);
+}
+
+/* ---------- Badges: icon + text, never color alone (DESIGN.md §3) ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge.ok {
+  color: var(--color-success);
+}
+
+.badge.warn {
+  color: var(--color-warning);
+}
+
+.badge.danger {
+  color: var(--color-danger);
+}
+
+.badge.info {
+  color: var(--color-info);
+}
+
+.badge.neutral {
+  color: var(--color-text-muted);
+}
+
+/* ---------- Buttons ---------- */
+
+/* Light theme: white on the danger red (6.5:1); dark theme: the dark accent text on the lighter
+   red (6.6:1). */
+.btn-danger {
+  border-color: transparent;
+  background-color: var(--color-danger);
+  color: var(--color-accent-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-danger:not([aria-disabled='true']):hover {
+    background-color: color-mix(in oklab, var(--color-danger) 88%, var(--color-text));
+  }
+}
+
+.btn-small {
+  min-block-size: var(--tap-target);
+  padding-block: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Dialogs (modern-web-guidance `dialog`) ---------- */
+
+.admin-dialog {
+  inline-size: min(100% - 2 * var(--space-4), 36rem);
+  max-inline-size: none;
+  max-block-size: calc(100dvh - 2 * var(--space-4));
+  padding: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow: var(--shadow-raised);
+}
+
+.admin-dialog:modal {
+  overscroll-behavior: contain;
+}
+
+.admin-dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: color-mix(in oklab, black 62%, transparent);
+}
+
+.dialog-body {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.dialog-body > * {
+  margin: 0;
+}
+
+.dialog-title {
+  font-size: var(--text-lg);
+}
+
+.dialog-text > :first-child {
+  margin-block-start: 0;
+}
+
+.dialog-text > :last-child {
+  margin-block-end: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+@media (forced-colors: active) {
+  .btn-danger {
+    border-color: ButtonText;
+  }
+}

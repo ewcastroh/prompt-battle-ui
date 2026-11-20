@@ -119,3 +119,12 @@ export function msUntilNextSecond(ms: number): number {
   // +5 ms so the tick lands just after the boundary, never just before it.
   return (fraction === 0 ? 1000 : fraction) + 5;
 }
+
+/** Parses an HTTP-date (`Wed, 02 Dec 2026 15:04:05 GMT`) to epoch ms, or `null`. */
+export function parseHttpDate(value: string | null): number | null {
+  if (!value) {
+    return null;
+  }
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? null : ms;
+}

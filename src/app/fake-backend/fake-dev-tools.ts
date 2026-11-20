@@ -11,6 +11,7 @@ import {
   isFixtureData,
   isFixtureScreen,
 } from './fake-fixtures';
+import { SceneData, StageSceneName, buildScene, isStageScene } from './fake-scenes';
 
 /**
  * Dev-only tools around the in-browser fake API (`ng serve -c fake`; never in production builds):
@@ -20,18 +21,33 @@ import {
  *   worst-case data.
  * - **Toolbar** (`?dev`): a "Demo data / Worst case" switch, a screen picker and an offline toggle,
  *   fixed at the bottom of the page.
- * - **Test hook** (`window.__pbFake`): admin actions and the offline switch for Playwright.
+ * - **Scenes** (`/stage/<city>?scene=<name>&data=demo|worst`, also on `/admin/<city>`): the fake event
+ *   is played up to that state before the app starts (fake-scenes.ts), for every stage phase.
+ * - **Test hook** (`window.__pbFake`): admin actions, scenes, the fake clock and the offline switch
+ *   for Playwright.
+ *
+ * The fake lives in the page, so each tab has its own event: a stage tab and an admin tab don't
+ * share state. Drive a stage from Playwright (or the console) through `window.__pbFake`.
  */
 
-/** Simulated network failure for every `/api` request while true. */
-export const fakeControls = { offline: false };
+/**
+ * `offline`: every `/api` request fails like a dropped connection.
+ * `skewMs`: the fake server's clock runs this far ahead of the device (scenes and tests move time).
+ */
+export const fakeControls = { offline: false, skewMs: 0 };
 
 let api: FakeApi | null = null;
 
 /** The page's fake API (one per page load). */
 export function fakeApi(): FakeApi {
-  return (api ??= new FakeApi());
+  return (api ??= new FakeApi(() => Date.now() + fakeControls.skewMs));
 }
+
+const fakeClock = {
+  advance(ms: number) {
+    fakeControls.skewMs += ms;
+  },
+};
 
 interface FixtureMode {
   screen: FixtureScreen;
@@ -131,6 +147,12 @@ export interface FakeHook {
   closeRound(city: string): void;
   /** Makes every `/api` request fail like a dropped connection. */
   setOffline(offline: boolean): void;
+  /** Plays the city's event up to a stage scene (fake-scenes.ts). */
+  scene(city: string, name: StageSceneName, data?: SceneData): void;
+  /** Moves the fake server clock forward. */
+  advance(ms: number): void;
+  /** Keeps transient phases (closing, final scoring) until released. */
+  hold(on: boolean): void;
 }
 
 function adminToken(city: string): string {
@@ -186,6 +208,15 @@ const hook: FakeHook = {
   setOffline(offline) {
     fakeControls.offline = offline;
   },
+  scene(city, name, data = 'demo') {
+    buildScene(fakeApi(), fakeClock, city, name, data);
+  },
+  advance(ms) {
+    fakeClock.advance(ms);
+  },
+  hold(on) {
+    fakeApi().hold = on;
+  },
 };
 
 // ------------------------------------------------------------------ startup
@@ -206,7 +237,19 @@ export function installFakeDevTools(): void {
       // Storage blocked: the fixture still answers, the player starts on the join form.
     }
   }
-  if (new URLSearchParams(location.search).has('dev')) {
+  const params = new URLSearchParams(location.search);
+  const scene = params.get('scene');
+  const sceneCity = /\/(?:stage|admin)\/([^/?#]+)/.exec(location.pathname)?.[1];
+  if (isStageScene(scene) && sceneCity && fakeApi().cityName(sceneCity)) {
+    buildScene(
+      fakeApi(),
+      fakeClock,
+      sceneCity,
+      scene,
+      params.get('data') === 'worst' ? 'worst' : 'demo',
+    );
+  }
+  if (params.has('dev') && !scene) {
     renderToolbar(mode);
   }
 }

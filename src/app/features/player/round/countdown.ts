@@ -11,7 +11,12 @@ import {
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Icon } from '../../../shared/icon/icon';
-import { formatCountdown, msUntilNextSecond, remainingMs, remainingSeconds } from '../server-clock';
+import {
+  formatCountdown,
+  msUntilNextSecond,
+  remainingMs,
+  remainingSeconds,
+} from '../../../core/time/server-clock';
 
 /** From this many seconds left, the countdown warns (DESIGN.md §7: last 60 s). */
 export const LAST_MINUTE_SECONDS = 60;

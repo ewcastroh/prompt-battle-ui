@@ -25,7 +25,7 @@ npm run start:fake   # in-browser fake API, no backend needed → http://localho
 npm start            # real API at the URL in public/config.json (default http://localhost:8080)
 ```
 
-With the fake backend, the admin tokens are `fake-admin-token-mde-0123456789` and `fake-admin-token-bog-0123456789`.
+With the fake backend, the admin tokens are `fake-admin-token-mde-0123456789` and `fake-admin-token-bog-0123456789`. To see the stage in any phase without playing a round, open `/stage/mde?scene=podium-4` (scenes: `lobby`, `gallery`, `round-open`, `round-last-minute`, `practice-closing`, `closing`, `scored`, `mini-0`…`mini-3`, `final-scoring`, `podium-0`…`podium-5`, `finished`; add `&data=worst` for worst-case data). The fake API lives in the page, so a stage tab and an admin tab don't share an event.
 
 To run the API and UI together, use `docker compose up --build` in the parent `prompt-battle-kit` folder.
 
@@ -33,8 +33,8 @@ To run the API and UI together, use `docker compose up --build` in the parent `p
 
 ```bash
 npm run verify        # lint, format check, translation key parity, unit tests, production build
-npm run e2e           # Playwright smoke against the fake API (360×800, es/en × light/dark, + WebKit)
-npm run e2e:screens   # every player screen in demo and worst-case data → e2e/screenshots/
+npm run e2e           # Playwright smoke against the fake API: player and admin at 360×800 (es/en × light/dark, + WebKit), stage and admin on desktop
+npm run e2e:screens   # every player screen, stage scene (1920×1080, 1280×720) and admin view, demo and worst case → e2e/screenshots/
 ```
 
 First run: `npx playwright install chromium webkit`.

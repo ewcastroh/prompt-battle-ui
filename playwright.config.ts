@@ -7,6 +7,9 @@ import { defineConfig, devices } from '@playwright/test';
  *   plus one WebKit (iPhone engine) run in es/light.
  * - `npm run e2e:screens`: every player screen in demo and worst-case data (@screens), with
  *   screenshots in e2e/screenshots/ (git-ignored), in es/light and en/dark.
+ * - Stage and admin (PLAN U3): tests tagged `@desktop` run on desktop Chromium (stage at 1920×1080
+ *   and 1280×720, admin on a laptop) in es/light and en/dark; admin tests without `@desktop` run on
+ *   the phone projects at 360×800.
  *
  * A dedicated port keeps a developer's own `npm start` (real API) from being reused by mistake.
  */
@@ -31,6 +34,13 @@ const webkitPhone = {
   browserName: 'webkit' as const,
   deviceScaleFactor: 3,
   userAgent: devices['iPhone 15'].userAgent,
+};
+
+const desktop = {
+  browserName: 'chromium' as const,
+  viewport: { width: 1920, height: 1080 },
+  deviceScaleFactor: 1,
+  userAgent: devices['Desktop Chrome'].userAgent,
 };
 
 type Lang = 'es' | 'en';
@@ -71,33 +81,54 @@ export default defineConfig({
     {
       name: 'chromium-es-light',
       grep: /@smoke/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('es', 'light') },
     },
     {
       name: 'chromium-es-dark',
       grep: /@smoke/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('es', 'dark') },
     },
     {
       name: 'chromium-en-light',
       grep: /@smoke/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('en', 'light') },
     },
     {
       name: 'chromium-en-dark',
       grep: /@smoke/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('en', 'dark') },
     },
-    { name: 'webkit-es-light', grep: /@smoke/, use: { ...webkitPhone, ...variant('es', 'light') } },
+    {
+      name: 'webkit-es-light',
+      grep: /@smoke/,
+      grepInvert: /@desktop/,
+      use: { ...webkitPhone, ...variant('es', 'light') },
+    },
     {
       name: 'screens-es-light',
       grep: /@screens/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('es', 'light') },
     },
     {
       name: 'screens-en-dark',
       grep: /@screens/,
+      grepInvert: /@desktop/,
       use: { ...chromiumPhone, ...variant('en', 'dark') },
+    },
+    {
+      name: 'desktop-es-light',
+      grep: /@desktop/,
+      use: { ...desktop, ...variant('es', 'light') },
+    },
+    {
+      name: 'desktop-en-dark',
+      grep: /@desktop/,
+      use: { ...desktop, ...variant('en', 'dark') },
     },
   ],
 });

@@ -1,0 +1,277 @@
+<div class="section-head">
+  <h2>{{ 'admin.control.title' | transloco }}</h2>
+  @if (state(); as s) {
+    <p class="summary">
+      <span class="badge info">{{ 'admin.phase.' + s.phase | transloco }}</span>
+      <span>{{ 'admin.control.players' | transloco: { count: s.playersCount } }}</span>
+      <span>{{ 'admin.control.scoredRounds' | transloco: { count: s.scoredRoundsDone } }}</span>
+    </p>
+  }
+</div>
+
+@if (state(); as s) {
+  @if (round(); as r) {
+    <div class="round">
+      <p class="round-name">
+        <strong class="user-text">{{ r.name }}</strong>
+        <span class="badge neutral">{{
+          (r.scored ? 'admin.rounds.scored' : 'admin.rounds.practice') | transloco
+        }}</span>
+        <span class="badge" [class]="'badge status-' + r.status">{{
+          'admin.runStatus.' + r.status | transloco
+        }}</span>
+      </p>
+      <dl class="facts">
+        @if (r.status === 'OPEN') {
+          <div>
+            <dt>{{ 'admin.control.timeLeft' | transloco }}</dt>
+            <dd class="mono clock" [class.warn]="seconds() <= 60">
+              <span role="timer">{{ countdown() }}</span>
+              @if (seconds() > 0 && seconds() <= 60) {
+                <span class="cue">{{ 'admin.control.lastMinute' | transloco }}</span>
+              }
+            </dd>
+          </div>
+        }
+        <div>
+          <dt>{{ 'admin.control.submissions' | transloco }}</dt>
+          <dd class="mono">{{ r.submissionsCount }} / {{ s.playersCount }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'admin.control.inFlight' | transloco }}</dt>
+          <dd class="mono">{{ r.inFlight }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'admin.control.extensions' | transloco }}</dt>
+          <dd class="mono">{{ r.extensions }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'admin.control.providers' | transloco }}</dt>
+          <dd class="mono">{{ r.imageProvider ?? '—' }} · {{ r.embeddingProvider ?? '—' }}</dd>
+        </div>
+      </dl>
+      @if (r.status === 'OPEN' || r.status === 'SCORING_FAILED') {
+        <div class="section-actions">
+          @if (r.status === 'OPEN') {
+            <button type="button" class="btn btn-danger" (click)="confirmClose()">
+              <pb-icon name="square" />
+              {{ 'admin.control.close' | transloco }}
+            </button>
+            <button
+              type="button"
+              class="btn"
+              [attr.aria-disabled]="live.busy() ? 'true' : null"
+              (click)="extend()"
+            >
+              <pb-icon name="plus" />
+              {{ 'admin.control.extend' | transloco }}
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="btn btn-primary"
+              [attr.aria-disabled]="live.busy() ? 'true' : null"
+              (click)="rescore()"
+            >
+              <pb-icon name="rotate-ccw" />
+              {{ 'admin.control.rescore' | transloco }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="admin-hint">{{ 'admin.control.noRound' | transloco }}</p>
+  }
+
+  <div class="section-actions">
+    @if (rounds.nextStartable(); as nextRound) {
+      <button
+        type="button"
+        class="btn btn-primary"
+        [attr.aria-disabled]="live.busy() ? 'true' : null"
+        (click)="startNext()"
+      >
+        <pb-icon name="play" />
+        <span class="user-text">{{
+          'admin.control.start' | transloco: { name: nextRound.name }
+        }}</span>
+      </button>
+    }
+    @if (canStartMini()) {
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-disabled]="live.busy() ? 'true' : null"
+        (click)="act({ kind: 'mini-podium/start' })"
+      >
+        <pb-icon name="trophy" />
+        {{ 'admin.control.startMini' | transloco }}
+      </button>
+    }
+    @if (canStartPodium()) {
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-disabled]="live.busy() ? 'true' : null"
+        (click)="act({ kind: 'podium/start' })"
+      >
+        <pb-icon name="trophy" />
+        {{ 'admin.control.startPodium' | transloco }}
+      </button>
+    }
+    @if (showGallerySwitch()) {
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-pressed]="s.practiceGalleryShown"
+        [attr.aria-disabled]="live.busy() ? 'true' : null"
+        (click)="act({ kind: 'practice/gallery', show: !s.practiceGalleryShown })"
+      >
+        <pb-icon name="image" />
+        {{ 'admin.control.gallery' | transloco }}
+      </button>
+    }
+    @if (canResetPodium()) {
+      <button type="button" class="btn" (click)="confirmReset()">
+        <pb-icon name="rotate-ccw" />
+        {{ 'admin.control.resetPodium' | transloco }}
+      </button>
+    }
+  </div>
+
+  @if (s.phase === 'FINAL_SCORING') {
+    <p class="preparing">
+      <pb-spinner labelledBy="admin-final-scoring" />
+      <span id="admin-final-scoring">{{ 'admin.control.finalScoring' | transloco }}</span>
+    </p>
+  }
+
+  @if (next(); as step) {
+    <div class="next">
+      <button
+        type="button"
+        class="btn btn-primary btn-next"
+        [attr.aria-disabled]="!step.enabled || live.busy() ? 'true' : null"
+        aria-describedby="admin-next-progress"
+        (click)="step.enabled && act({ kind: step.kind })"
+      >
+        <pb-icon name="skip-forward" />
+        <span>
+          {{ 'admin.control.next' | transloco }}
+          <span class="next-what">{{ step.labelKey | transloco: { rank: step.rank } }}</span>
+        </span>
+      </button>
+      <p id="admin-next-progress" class="admin-hint">
+        @if (preview(); as p) {
+          {{
+            'admin.control.progress' | transloco: { step: p.podium.step ?? 0, size: p.podium.size }
+          }}
+        }
+      </p>
+    </div>
+  }
+
+  @if (error(); as message) {
+    <pb-inline-message
+      tone="danger"
+      [dismissLabel]="'admin.dismiss' | transloco"
+      (dismissed)="error.set(null)"
+    >
+      {{ message.key | transloco: message.params }}
+    </pb-inline-message>
+  }
+
+  @if (preview(); as p) {
+    <div class="table-region" tabindex="0" role="region" aria-labelledby="admin-preview-caption">
+      <table class="admin-table">
+        <caption id="admin-preview-caption">
+          {{
+            (p.kind === 'mini'
+              ? 'admin.control.previewMini'
+              : p.podium.step === null
+                ? 'admin.control.previewPodium'
+                : 'admin.control.podium'
+            ) | transloco
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="num">#</th>
+            <th scope="col">{{ 'admin.players.nickname' | transloco }}</th>
+            <th scope="col" class="num">
+              {{ (p.kind === 'mini' ? 'admin.entries.score' : 'admin.players.total') | transloco }}
+            </th>
+            <th scope="col">{{ 'admin.control.state' | transloco }}</th>
+            <th scope="col">{{ 'admin.actions' | transloco }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of p.podium.preview; track item.entryId) {
+            <tr>
+              <td class="num">{{ item.rank }}</td>
+              <th scope="row" class="user-text">{{ item.nickname }}</th>
+              <td class="num">{{ item.score | pbNum: 1 : locale() }}</td>
+              <td>
+                @if (item.revealed) {
+                  <span class="badge ok"
+                    ><pb-icon name="check" />{{ 'admin.control.revealed' | transloco }}</span
+                  >
+                } @else {
+                  <span class="badge neutral">{{ 'admin.control.pending' | transloco }}</span>
+                }
+                @if (!item.commentaryReady) {
+                  <span class="badge warn"
+                    ><pb-icon name="hourglass" />{{
+                      'admin.control.commentaryPending' | transloco
+                    }}</span
+                  >
+                }
+              </td>
+              <td class="actions">
+                <button
+                  type="button"
+                  class="btn btn-small"
+                  [attr.aria-disabled]="hiding() ? 'true' : null"
+                  (click)="hide(item.entryId, true)"
+                >
+                  <pb-icon name="eye-off" />
+                  {{ 'admin.entries.hide' | transloco }}
+                  <span class="visually-hidden">{{ item.nickname }}</span>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="admin-hint">{{ 'admin.control.previewEmpty' | transloco }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+} @else {
+  <p class="preparing">
+    <pb-spinner labelledBy="admin-control-loading" />
+    <span id="admin-control-loading">{{ 'admin.loading' | transloco }}</span>
+  </p>
+}
+
+<pb-confirm-dialog
+  #closeDialog
+  [heading]="'admin.control.closeTitle' | transloco"
+  [confirmLabel]="'admin.control.close' | transloco"
+  [action]="closeAction"
+>
+  <p>{{ 'admin.control.closeBody' | transloco: { name: round()?.name ?? '' } }}</p>
+</pb-confirm-dialog>
+
+<pb-confirm-dialog
+  #resetDialog
+  [heading]="'admin.control.resetPodiumTitle' | transloco"
+  [confirmLabel]="'admin.control.resetPodium' | transloco"
+  tone="primary"
+  [action]="resetAction"
+>
+  <p>{{ 'admin.control.resetPodiumBody' | transloco }}</p>
+</pb-confirm-dialog>

@@ -9,7 +9,7 @@ These third-party assets are bundled with the app. No other third-party code is 
 
 ## Icons (src/app/shared/icon/icon.ts)
 
-Icons `settings`, `sun`, `moon`, `check`, `x`, `circle-alert`, `map-pin`, `zoom-in`, `loader-circle`, `timer`, `ban`, `triangle-alert`, `circle-check`, `wifi-off`, `refresh-cw`, `trophy`, `hourglass`, `send`, `sparkles`, `info`, `ticket`, `image` and `monitor` are copied from [Lucide](https://lucide.dev) 1.0.0.
+Icons `settings`, `sun`, `moon`, `check`, `x`, `circle-alert`, `map-pin`, `zoom-in`, `loader-circle`, `timer`, `ban`, `triangle-alert`, `circle-check`, `wifi-off`, `refresh-cw`, `trophy`, `hourglass`, `send`, `sparkles`, `info`, `ticket`, `image`, `monitor`, `log-out`, `download`, `upload`, `play`, `square`, `plus`, `eye`, `eye-off`, `pencil`, `trash-2`, `user-x`, `skip-forward`, `rotate-ccw`, `bell`, `flag` and `activity` are copied from [Lucide](https://lucide.dev) 1.0.0.
 
 ```text
 ISC License
