@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Playwright (browser tool snapshots, logs and screenshots)
+.playwright/
+.playwright-mcp/
