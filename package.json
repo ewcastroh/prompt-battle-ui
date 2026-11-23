@@ -11,6 +11,7 @@
     "test:ci": "ng test --watch=false",
     "e2e": "playwright test --grep @smoke",
     "e2e:screens": "playwright test --grep @screens",
+    "e2e:compose": "playwright test -c playwright.compose.config.ts",
     "lint": "ng lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

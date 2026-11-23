@@ -20,7 +20,7 @@ function adminState(overrides: Partial<AdminState> = {}): AdminState {
     scoredRoundsDone: 2,
     round: null,
     miniPodium: null,
-    podium: { size: 5, step: 1, preview: [] },
+    podium: { roundId: null, size: 5, step: 1, preview: [] },
     practiceGalleryShown: false,
     ...overrides,
   };
@@ -36,21 +36,27 @@ describe('admin helpers', () => {
   });
 
   it('labels the big Next with the rank it reveals, and finishes after #1', () => {
-    expect(nextStep('PODIUM_REVEAL', { size: 5, step: 0, preview: [] })).toMatchObject({
+    expect(
+      nextStep('PODIUM_REVEAL', { roundId: null, size: 5, step: 0, preview: [] }),
+    ).toMatchObject({
       kind: 'podium/next',
       rank: 5,
       enabled: true,
     });
-    expect(nextStep('PODIUM_REVEAL', { size: 5, step: 5, preview: [] })).toMatchObject({
+    expect(
+      nextStep('PODIUM_REVEAL', { roundId: null, size: 5, step: 5, preview: [] }),
+    ).toMatchObject({
       labelKey: 'admin.control.showPrompts',
       enabled: true,
     });
-    expect(nextStep('MINI_PODIUM', { size: 3, step: 3, preview: [] })).toMatchObject({
-      kind: 'mini-podium/next',
-      enabled: false,
-    });
+    expect(nextStep('MINI_PODIUM', { roundId: 'r1', size: 3, step: 3, preview: [] })).toMatchObject(
+      {
+        kind: 'mini-podium/next',
+        enabled: false,
+      },
+    );
     // A podium preview (before podium/start) has no step: nothing to reveal yet.
-    expect(nextStep('LOBBY', { size: 5, step: null, preview: [] })).toBeNull();
+    expect(nextStep('LOBBY', { roundId: null, size: 5, step: null, preview: [] })).toBeNull();
   });
 
   it('checks uploads before sending them (JPEG or PNG, ≤ 10 MB)', () => {
@@ -154,7 +160,7 @@ describe('admin API and run actions', () => {
     expect(await second).toBeNull();
     const requests = backend.match('/api/admin/podium/next');
     expect(requests).toHaveLength(1);
-    requests[0].flush(adminState({ podium: { size: 5, step: 2, preview: [] } }));
+    requests[0].flush(adminState({ podium: { roundId: null, size: 5, step: 2, preview: [] } }));
     expect(await first).toBeNull();
     expect(live.state()?.podium?.step).toBe(2);
     expect(live.busy()).toBeNull();

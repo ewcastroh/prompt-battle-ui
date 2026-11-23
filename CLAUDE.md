@@ -5,18 +5,20 @@ Specs live in the parent repo `prompt-battle-kit`: `docs/SPEC.md`, `docs/API.md`
 
 ## Commands
 
-| Task                                                         | Command                                                          |
-| ------------------------------------------------------------ | ---------------------------------------------------------------- |
-| Install                                                      | `npm ci`                                                         |
-| Dev server, real API at `config.json`                        | `npm start` → http://localhost:4200                              |
-| Dev server, in-browser fake API                              | `npm run start:fake` (`ng serve -c fake`)                        |
-| Unit tests (Vitest)                                          | `npm run test:ci` (watch: `npm test`)                            |
-| Lint / format                                                | `npm run lint`, `npm run format:check` (`npm run format` to fix) |
-| Translation key parity                                       | `npm run i18n:check`                                             |
-| Production build                                             | `npm run build` → `dist/prompt-battle-ui/browser`                |
-| Playwright smoke (fake API, starts its own server on :4321)  | `npm run e2e`                                                    |
-| Every player screen, stage scene and admin view, screenshots | `npm run e2e:screens` → `e2e/screenshots/` (git-ignored)         |
-| **Full verification (run before saying a phase is done)**    | `npm run verify && npm run e2e && npm run e2e:screens`           |
+| Task                                                         | Command                                                           |
+| ------------------------------------------------------------ | ----------------------------------------------------------------- |
+| Install                                                      | `npm ci`                                                          |
+| Dev server, real API at `config.json`                        | `npm start` → http://localhost:4200                               |
+| Dev server, in-browser fake API                              | `npm run start:fake` (`ng serve -c fake`)                         |
+| Unit tests (Vitest)                                          | `npm run test:ci` (watch: `npm test`)                             |
+| Lint / format                                                | `npm run lint`, `npm run format:check` (`npm run format` to fix)  |
+| Translation key parity                                       | `npm run i18n:check`                                              |
+| Production build                                             | `npm run build` → `dist/prompt-battle-ui/browser`                 |
+| Playwright smoke (fake API, starts its own server on :4321)  | `npm run e2e`                                                     |
+| Every player screen, stage scene and admin view, screenshots | `npm run e2e:screens` → `e2e/screenshots/` (git-ignored)          |
+| **Full verification (run before saying a phase is done)**    | `npm run verify && npm run e2e && npm run e2e:screens`            |
+| Full two-city event on the real API (Compose stack up first) | `PB_ADMIN_TOKEN_MDE=… PB_ADMIN_TOKEN_BOG=… npm run e2e:compose`   |
+| Docker image (local only; production is Pages)               | `docker build -t prompt-battle-ui .` (`API_BASE_URL` at run time) |
 
 Fake admin tokens (fake backend only): `fake-admin-token-mde-0123456789`, `fake-admin-token-bog-0123456789`.
 Fake prompt hooks: `[blocked]` → BLOCKED, `[fail]` → FAILED, `[sim=0.83]` → that cosine.

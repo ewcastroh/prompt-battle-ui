@@ -1,5 +1,5 @@
 /**
- * Typed models for docs/API.md v1.1. Field names and nullability follow the contract exactly:
+ * Typed models for docs/API.md v1.4. Field names and nullability follow the contract exactly:
  * fields that don't apply are present with `null`, never omitted.
  * Instants are ISO-8601 UTC strings; image URLs are paths relative to the API base URL.
  */
@@ -209,6 +209,8 @@ export interface PodiumPreviewItem {
 }
 
 export interface PodiumState {
+  /** The mini-podium's round; `null` for the final podium (API.md 1.4). */
+  roundId: string | null;
   size: number;
   step: number | null;
   preview: PodiumPreviewItem[];

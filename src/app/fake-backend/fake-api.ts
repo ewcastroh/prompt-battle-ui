@@ -957,15 +957,19 @@ export class FakeApi {
       score: (playerId: string) => number,
       entryOf: (playerId: string) => string,
     ): PodiumPreviewItem[] =>
-      reveal.ranking.slice(0, reveal.size).map((playerId, i) => ({
-        rank: i + 1,
-        playerId,
-        nickname: this.players.get(playerId)!.nickname,
-        entryId: entryOf(playerId),
-        score: score(playerId),
-        revealed: reveal.size - (i + 1) + 1 <= reveal.step,
-        commentaryReady: true,
-      }));
+      // Reveal order, rank `size` first (API.md 1.4).
+      reveal.ranking
+        .slice(0, reveal.size)
+        .map((playerId, i) => ({
+          rank: i + 1,
+          playerId,
+          nickname: this.players.get(playerId)!.nickname,
+          entryId: entryOf(playerId),
+          score: score(playerId),
+          revealed: reveal.size - (i + 1) + 1 <= reveal.step,
+          commentaryReady: true,
+        }))
+        .reverse();
     const livePodium: Reveal = city.podium ?? { size: 0, step: 0, ranking: [] };
     if (!city.podium) {
       const ranking = this.finalRanking(city);
@@ -1007,9 +1011,11 @@ export class FakeApi {
             ),
           }
         : null,
+      // Non-null once the city has a scored run (API.md 1.4), even with no eligible player.
       podium:
-        livePodium.size > 0 || city.podium
+        this.scoredRuns(city).length > 0 || city.podium
           ? {
+              roundId: null,
               size: livePodium.size,
               step: city.podium ? city.podium.step : null,
               preview: preview(
