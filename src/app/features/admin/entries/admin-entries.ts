@@ -244,10 +244,14 @@ export class AdminEntries {
       )
       .reverse(),
   );
-  /** The picked round; follows the city's current round until the admin picks another. */
-  protected readonly roundId = linkedSignal<string | null>(
+  private readonly currentRoundId = computed(
     () => this.live.state()?.round?.id ?? this.playedRounds()[0]?.id ?? null,
   );
+  /**
+   * The picked round; follows the city's current round until the admin picks another. Linked to an id
+   * (not to the whole state), so a poll that changes only counters keeps the admin's pick.
+   */
+  protected readonly roundId = linkedSignal<string | null>(() => this.currentRoundId());
   protected readonly roundName = computed(
     () => this.playedRounds().find((round) => round.id === this.roundId())?.name ?? '',
   );

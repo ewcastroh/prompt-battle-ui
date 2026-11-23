@@ -970,6 +970,17 @@ export class FakeApi {
           commentaryReady: true,
         }))
         .reverse();
+    // ROUND_SCORED: a live mini-podium preview of the scored round (step null), as the API sends.
+    const scoredRound = this.currentRound(city);
+    const liveMini: (Reveal & { roundId: string }) | null =
+      city.phase === 'ROUND_SCORED' &&
+      scoredRound &&
+      city.runs.get(scoredRound.id)?.status === 'SCORED'
+        ? (() => {
+            const ranking = this.roundRanking(city, scoredRound.id);
+            return { roundId: scoredRound.id, size: Math.min(3, ranking.length), step: 0, ranking };
+          })()
+        : null;
     const livePodium: Reveal = city.podium ?? { size: 0, step: 0, ranking: [] };
     if (!city.podium) {
       const ranking = this.finalRanking(city);
@@ -999,18 +1010,29 @@ export class FakeApi {
               ).length,
             }
           : null,
-      miniPodium: city.mini
+      miniPodium: liveMini
         ? {
-            roundId: city.mini.roundId,
-            size: city.mini.size,
-            step: city.mini.step,
+            roundId: liveMini.roundId,
+            size: liveMini.size,
+            step: null,
             preview: preview(
-              city.mini,
-              (id) => city.runs.get(city.mini!.roundId)!.entries.get(id)?.score ?? 0,
-              (id) => city.runs.get(city.mini!.roundId)!.entries.get(id)?.attemptId ?? '',
+              liveMini,
+              (id) => city.runs.get(liveMini.roundId)!.entries.get(id)?.score ?? 0,
+              (id) => city.runs.get(liveMini.roundId)!.entries.get(id)?.attemptId ?? '',
             ),
           }
-        : null,
+        : city.mini
+          ? {
+              roundId: city.mini.roundId,
+              size: city.mini.size,
+              step: city.mini.step,
+              preview: preview(
+                city.mini,
+                (id) => city.runs.get(city.mini!.roundId)!.entries.get(id)?.score ?? 0,
+                (id) => city.runs.get(city.mini!.roundId)!.entries.get(id)?.attemptId ?? '',
+              ),
+            }
+          : null,
       // Non-null once the city has a scored run (API.md 1.4), even with no eligible player.
       podium:
         this.scoredRuns(city).length > 0 || city.podium

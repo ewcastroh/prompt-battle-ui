@@ -96,7 +96,11 @@ export class AdminControl {
     }
     return nextStep(state.phase, state.phase === 'MINI_PODIUM' ? state.miniPodium : state.podium);
   });
-  protected readonly canStartMini = computed(() => this.state()?.phase === 'ROUND_SCORED');
+  /** API.md §7: `miniPodium` is null in ROUND_SCORED when MINI_PODIUM_ENABLED is false. */
+  protected readonly canStartMini = computed(() => {
+    const state = this.state();
+    return state?.phase === 'ROUND_SCORED' && state.miniPodium !== null;
+  });
   protected readonly canStartPodium = computed(() => {
     const state = this.state();
     return (
@@ -123,8 +127,13 @@ export class AdminControl {
     return state.podium ? { kind: 'podium' as const, podium: state.podium } : null;
   });
 
-  protected readonly closeAction = () => this.runRoundAction('close');
-  protected readonly resetAction = () => this.live.act({ kind: 'podium/reset' });
+  protected readonly closeAction = () => {
+    const round = this.round();
+    return round
+      ? this.live.actWhenIdle({ kind: 'close', roundId: round.id })
+      : Promise.resolve(null);
+  };
+  protected readonly resetAction = () => this.live.actWhenIdle({ kind: 'podium/reset' });
 
   protected async act(action: RunAction): Promise<void> {
     this.error.set(null);

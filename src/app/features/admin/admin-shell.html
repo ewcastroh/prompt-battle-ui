@@ -6,7 +6,7 @@
         <ul class="nav-links">
           @for (id of sections; track id) {
             <li>
-              <a class="nav-link" [href]="'#admin-' + id">{{ 'admin.nav.' + id | transloco }}</a>
+              <a class="nav-link" [href]="sectionHref(id)">{{ 'admin.nav.' + id | transloco }}</a>
             </li>
           }
         </ul>
@@ -22,15 +22,15 @@
 
       <div class="layout">
         <div class="col">
-          <pb-admin-control id="admin-control" class="admin-section" />
-          <pb-admin-rounds id="admin-rounds" class="admin-section" />
-          <pb-admin-players id="admin-players" class="admin-section" />
-          <pb-admin-entries id="admin-entries" class="admin-section" />
+          <pb-admin-control id="admin-control" class="admin-section" tabindex="-1" />
+          <pb-admin-rounds id="admin-rounds" class="admin-section" tabindex="-1" />
+          <pb-admin-players id="admin-players" class="admin-section" tabindex="-1" />
+          <pb-admin-entries id="admin-entries" class="admin-section" tabindex="-1" />
         </div>
         <div class="col side">
-          <pb-admin-providers id="admin-providers" class="admin-section" />
-          <pb-admin-alerts id="admin-alerts" class="admin-section" />
-          <pb-admin-event id="admin-event" class="admin-section" />
+          <pb-admin-providers id="admin-providers" class="admin-section" tabindex="-1" />
+          <pb-admin-alerts id="admin-alerts" class="admin-section" tabindex="-1" />
+          <pb-admin-event id="admin-event" class="admin-section" tabindex="-1" />
         </div>
       </div>
     }

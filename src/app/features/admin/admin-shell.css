@@ -69,6 +69,11 @@
     flex: none;
   }
 
+  /* A section reached from the sticky bar lands below it, not under it. */
+  .admin-section {
+    scroll-margin-block-start: calc(var(--tap-target) + var(--space-4));
+  }
+
   /* One column on phones; a side column for the shared panels on wide screens. */
   .layout {
     display: grid;

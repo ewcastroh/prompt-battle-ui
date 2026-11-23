@@ -73,6 +73,22 @@ test.describe('admin', () => {
     expectFirstPartyOnly(requests, baseURL!);
   });
 
+  test('section links jump within the console @smoke', async ({ page }, testInfo) => {
+    const t = copyFor(testInfo);
+    await signIn(page);
+    const nav = page.getByRole('navigation', { name: t.admin.nav.label });
+    // Panels load their data on their own; wait until none grows after the jump.
+    await expect(page.getByText(t.admin.loading, { exact: true })).toHaveCount(0);
+    for (const id of ['event', 'players', 'control'] as const) {
+      await nav.getByRole('link', { name: t.admin.nav[id], exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/mde#admin-${id}$`));
+      await expect(page.locator(`#admin-${id}`)).toBeInViewport();
+      await expect(page.locator(`#admin-${id}`)).toBeFocused();
+    }
+    // Still the console (not the landing page), still signed in.
+    await expect(page.getByRole('heading', { name: t.admin.control.title })).toBeVisible();
+  });
+
   test('runs a round: start, +60 s, close with confirmation @smoke', async ({ page }, testInfo) => {
     const t = copyFor(testInfo);
     await signIn(page);

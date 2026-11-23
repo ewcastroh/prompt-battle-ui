@@ -564,7 +564,8 @@
   },
   "errorPage": {
     "title": "Algo salió mal",
-    "backHome": "Ver las ciudades"
+    "backHome": "Ver las ciudades",
+    "retry": "Reintentar"
   },
   "errors": {
     "NICKNAME_INVALID": "Tu alias debe tener entre {{min}} y {{max}} caracteres: letras, números, espacios, _ o -.",

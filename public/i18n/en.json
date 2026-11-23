@@ -564,7 +564,8 @@
   },
   "errorPage": {
     "title": "Something went wrong",
-    "backHome": "See the cities"
+    "backHome": "See the cities",
+    "retry": "Try again"
   },
   "errors": {
     "NICKNAME_INVALID": "Your nickname must be {{min}}–{{max}} characters: letters, digits, spaces, _ or -.",

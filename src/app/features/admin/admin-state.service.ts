@@ -13,7 +13,9 @@ export type RunAction = Parameters<AdminApi['runAction']>[0];
 /**
  * The own city's live state for the console (`GET /api/admin/state`, ETag, every 2 s) and the run
  * controls. Run actions go one at a time: while one is in flight, others (a double-tapped "Next")
- * are ignored, so each tap moves the podium exactly one step. An action's response is the new state.
+ * are ignored, so each tap moves the podium exactly one step. An action's response is the new state,
+ * and a poll that was already in flight when it arrived is dropped: it may predate the action, and
+ * showing the old step for 2 s would invite a second tap.
  *
  * `version` changes whenever the state body changes; panels that list players or entries reload
  * on it instead of polling on their own.
@@ -24,6 +26,10 @@ export class AdminStateService {
   private readonly clock = new ServerClock();
   private etag: string | null = null;
   private running = false;
+  /** Bumped when an action's response is applied; polls started before it are stale. */
+  private writes = 0;
+  /** Settles when the action in flight finishes. */
+  private idle: Promise<void> = Promise.resolve();
 
   private readonly stateSignal = signal<AdminState | null>(null);
   private readonly versionSignal = signal(0);
@@ -77,8 +83,11 @@ export class AdminStateService {
       return null;
     }
     this.busySignal.set(action.kind);
+    let settle!: () => void;
+    this.idle = new Promise<void>((resolve) => (settle = resolve));
     try {
       const next = await this.api.runAction(action);
+      this.writes++;
       this.apply(next);
       // The next poll's body equals this one; reset the ETag so it can't be skipped as stale.
       this.etag = null;
@@ -88,11 +97,24 @@ export class AdminStateService {
       return error instanceof ApiError ? error : new ApiError(0, 'UNKNOWN');
     } finally {
       this.busySignal.set(null);
+      settle();
     }
+  }
+
+  /**
+   * For a confirmed action (close round, reset podium): waits for the action in flight instead of
+   * being dropped, so a confirmation dialog never closes as if it had worked when nothing was sent.
+   */
+  async actWhenIdle(action: RunAction): Promise<ApiError | null> {
+    while (this.busySignal() !== null) {
+      await this.idle;
+    }
+    return this.act(action);
   }
 
   private async poll(): Promise<boolean> {
     const sentAt = Date.now();
+    const writes = this.writes;
     let response;
     try {
       response = await this.api.state(this.etag);
@@ -106,6 +128,10 @@ export class AdminStateService {
       this.offsetSignal.set(
         this.clock.add({ serverDate: response.serverDate, sentAt, receivedAt: Date.now() }),
       );
+    }
+    if (writes !== this.writes) {
+      this.poller.now(); // started before an action's response: may be stale, ask again
+      return this.running;
     }
     if (response.status === 200 && response.body && this.running) {
       this.etag = response.etag;

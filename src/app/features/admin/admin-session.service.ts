@@ -25,6 +25,9 @@ export type LoginError =
  * token never runs the Medellín console. It is stored per city; a 401 anywhere (unknown token,
  * event reset) ends the session.
  */
+
+/** Like the other admin calls (`AdminApi`). */
+const ADMIN_ME_TIMEOUT_MS = 15_000;
 @Service({ autoProvided: false })
 export class AdminSessionService {
   private readonly http = inject(HttpClient);
@@ -107,6 +110,8 @@ export class AdminSessionService {
         this.http.get<AdminMe>('/api/admin/me', {
           headers: new HttpHeaders({ 'X-Admin-Token': token }),
           cache: 'no-store',
+          // A stalled request becomes NETWORK_ERROR, so the retry path runs instead of "checking" forever.
+          timeout: ADMIN_ME_TIMEOUT_MS,
         }),
       );
     } catch (error) {

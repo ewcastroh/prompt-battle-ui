@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -63,6 +64,7 @@ export class AdminShell {
   private readonly title = inject(Title);
   private readonly transloco = inject(TranslocoService);
   private readonly language = inject(LanguageService);
+  private readonly location = inject(Location);
   protected readonly session = inject(AdminSessionService);
   protected readonly live = inject(AdminStateService);
 
@@ -92,6 +94,14 @@ export class AdminShell {
     effect(() => {
       this.title.setTitle(`${this.heading()} | ${this.transloco.translate('app.name')}`);
     });
+  }
+
+  /**
+   * A section link: this page's own URL plus the fragment. A bare `#admin-…` would resolve against
+   * `<base href>` (`/` or `/prompt-battle-ui/`) and load the landing page instead of scrolling.
+   */
+  protected sectionHref(id: string): string {
+    return `${this.location.prepareExternalUrl(this.location.path())}#admin-${id}`;
   }
 
   protected logout(): void {
