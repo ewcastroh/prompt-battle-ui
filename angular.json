@@ -48,6 +48,22 @@
               "extractLicenses": false,
               "sourceMap": true
             },
+            "lan": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "ignore": ["config.json"]
+                },
+                {
+                  "glob": "config.json",
+                  "input": ".lan"
+                }
+              ]
+            },
             "fake": {
               "optimization": false,
               "extractLicenses": false,
@@ -70,6 +86,10 @@
             },
             "development": {
               "buildTarget": "prompt-battle-ui:build:development"
+            },
+            "lan": {
+              "buildTarget": "prompt-battle-ui:build:lan",
+              "allowedHosts": [".local"]
             },
             "fake": {
               "buildTarget": "prompt-battle-ui:build:fake"

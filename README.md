@@ -27,6 +27,8 @@ npm start            # real API at the URL in public/config.json (default http:/
 
 With the fake backend, the admin tokens are `fake-admin-token-mde-0123456789` and `fake-admin-token-bog-0123456789`. To see the stage in any phase without playing a round, open `/stage/mde?scene=podium-4` (scenes: `lobby`, `gallery`, `round-open`, `round-last-minute`, `practice-closing`, `closing`, `scored`, `mini-0`…`mini-3`, `final-scoring`, `podium-0`…`podium-5`, `finished`; add `&data=worst` for worst-case data). The fake API lives in the page, so a stage tab and an admin tab don't share an event.
 
+To try it on your phone (same Wi-Fi), run `npm run start:lan` (real API; it prints the phone URLs and the `CORS_ALLOWED_ORIGINS` / `PUBLIC_UI_URL` the API needs) or `npm run start:fake:lan` (fake API in the page, no backend). Set `LAN_HOST=<ip>` to override the detected address. See `docs/DEPLOYMENT.md` in the parent repo.
+
 To run the API and UI together, use `docker compose up --build` in the parent `prompt-battle-kit` folder.
 
 ## Verify
@@ -47,7 +49,8 @@ The only setting is the API base URL, read at runtime from `config.json` next to
 
 - Local: `public/config.json` (`{ "apiBaseUrl": "http://localhost:8080" }`).
 - CI: the deploy jobs write it from the GitHub Actions variable `API_BASE_URL` (`scripts/write-config.mjs`).
-- Docker: the nginx entrypoint writes it from the `API_BASE_URL` environment variable.
+- Docker: the nginx entrypoint writes it from the `API_BASE_URL` environment variable (https; http also for localhost, private IPv4 ranges and `*.local`).
+- `npm run start:lan`: a generated, git-ignored `.lan/config.json` with the computer's LAN IP.
 
 No secrets ever reach the UI.
 
