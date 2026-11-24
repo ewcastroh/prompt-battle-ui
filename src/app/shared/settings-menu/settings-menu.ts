@@ -1,4 +1,5 @@
-import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, signal, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import {
   LANGUAGES,
@@ -17,14 +18,20 @@ let nextId = 0;
  * Uses the Popover API with `popovertarget` (top layer, light dismiss, Escape, implicit anchor and
  * `aria-expanded` handled by the browser). Where the Popover API is missing, the panel falls back to a
  * plain disclosure toggled by the same button. It is not an ARIA menu: it holds form controls.
+ *
+ * With `homeLink`, the panel ends with a plain link to `/` (the cities). Only the screens that have no
+ * visible way home turn it on (the stage, the admin console); player screens leave it off.
  */
 @Component({
   selector: 'pb-settings-menu',
-  imports: [Icon, TranslocoPipe],
+  imports: [Icon, RouterLink, TranslocoPipe],
   templateUrl: './settings-menu.html',
   styleUrl: './settings-menu.css',
 })
 export class SettingsMenu {
+  /** Adds a "See the cities" link (to `/`) at the end of the panel. */
+  readonly homeLink = input(false);
+
   private readonly languageService = inject(LanguageService);
   protected readonly theme = inject(ThemeService);
 

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, booleanAttribute, input } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { SettingsMenu } from '../settings-menu/settings-menu';
 
@@ -30,7 +30,7 @@ let nextId = 0;
         </p>
         <h1 class="title" tabindex="-1" [id]="titleId()">{{ title() }}</h1>
       </div>
-      <pb-settings-menu />
+      <pb-settings-menu [homeLink]="homeLink()" />
     </header>
   `,
   styleUrl: './app-header.css',
@@ -40,6 +40,8 @@ export class AppHeader {
   readonly title = input.required<string>();
   readonly cityName = input<string | null>(null);
   readonly variant = input<HeaderVariant>('default');
+  /** Adds a "See the cities" link to the settings popover (stage and admin; players have no use for it). */
+  readonly homeLink = input(false, { transform: booleanAttribute });
   /** Id of the `<h1>`, for focus routing and `aria-labelledby`. */
   readonly titleId = input(`pb-header-title-${nextId++}`);
 }

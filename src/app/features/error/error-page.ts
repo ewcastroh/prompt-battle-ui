@@ -32,7 +32,7 @@ import { Icon } from '../../shared/icon/icon';
             </p>
           }
           <p>
-            <a routerLink="/">{{ 'errorPage.backHome' | transloco }}</a>
+            <a routerLink="/">{{ 'common.backHome' | transloco }}</a>
           </p>
         </div>
       </section>

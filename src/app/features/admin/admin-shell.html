@@ -1,4 +1,4 @@
-<pb-app-header [title]="heading()" [cityName]="cityName()" titleId="admin-title" />
+<pb-app-header homeLink [title]="heading()" [cityName]="cityName()" titleId="admin-title" />
 <main class="admin">
   @switch (session.session().kind) {
     @case ('ready') {
@@ -10,6 +10,10 @@
             </li>
           }
         </ul>
+        <a class="btn btn-small home" routerLink="/">
+          <pb-icon name="house" />
+          <span class="home-text">{{ 'common.backHome' | transloco }}</span>
+        </a>
         <button type="button" class="btn btn-small logout" (click)="logout()">
           <pb-icon name="log-out" />
           {{ 'admin.logout' | transloco }}

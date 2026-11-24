@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CityService } from '../../core/city/city.service';
 import { LanguageService } from '../../core/i18n/language.service';
@@ -52,6 +53,7 @@ export const ADMIN_SECTIONS = [
     AppHeader,
     Icon,
     InlineMessage,
+    RouterLink,
     Spinner,
     TranslocoPipe,
   ],
@@ -65,6 +67,7 @@ export class AdminShell {
   private readonly transloco = inject(TranslocoService);
   private readonly language = inject(LanguageService);
   private readonly location = inject(Location);
+  private readonly router = inject(Router);
   protected readonly session = inject(AdminSessionService);
   protected readonly live = inject(AdminStateService);
 
@@ -104,7 +107,12 @@ export class AdminShell {
     return `${this.location.prepareExternalUrl(this.location.path())}#admin-${id}`;
   }
 
+  /**
+   * A voluntary sign-out goes back to the cities page. Forced ones (401, event reset) call
+   * `session.logout(reason)` elsewhere and stay here, on the form with its reason.
+   */
   protected logout(): void {
     this.session.logout();
+    void this.router.navigateByUrl('/');
   }
 }

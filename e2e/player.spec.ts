@@ -86,6 +86,8 @@ test.describe('player', () => {
     await expect(screenHeading(page)).toHaveText(from.app.eventTitle);
 
     await page.getByRole('button', { name: from.settings.open }).click();
+    // Players have no link to the cities page in the popover.
+    await expect(page.getByRole('link', { name: from.common.backHome })).toHaveCount(0);
     await page
       .getByRole('radio', {
         name: startsEnglish ? from.settings.languageName.es : from.settings.languageName.en,
