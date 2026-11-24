@@ -10,6 +10,7 @@
     "retry": "Reintentar"
   },
   "common": {
+    "backHome": "Ver las ciudades",
     "errorPrefix": "Error: ",
     "warningPrefix": "Aviso: "
   },
@@ -564,7 +565,6 @@
   },
   "errorPage": {
     "title": "Algo salió mal",
-    "backHome": "Ver las ciudades",
     "retry": "Reintentar"
   },
   "errors": {

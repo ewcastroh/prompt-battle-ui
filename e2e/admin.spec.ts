@@ -68,9 +68,32 @@ test.describe('admin', () => {
     await checkScreen(page);
     await page.reload();
     await expect(page.getByRole('heading', { name: t.admin.control.title })).toBeVisible();
+    // Signing out on purpose lands on the cities page, and the token is gone.
     await page.getByRole('button', { name: t.admin.logout }).click();
-    await expect(page.getByText(t.admin.login.reason.LOGGED_OUT)).toBeVisible();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('heading', { name: t.landing.heading })).toBeVisible();
+    await page.goto('/admin/mde');
+    await expect(page.getByLabel(t.admin.login.label)).toBeVisible();
     expectFirstPartyOnly(requests, baseURL!);
+  });
+
+  test('links back to the cities page from the sign-in form and the console @smoke', async ({
+    page,
+  }, testInfo) => {
+    const t = copyFor(testInfo);
+    await page.goto('/admin/mde');
+    await page.getByRole('link', { name: t.common.backHome }).click();
+    await expect(page.getByRole('heading', { name: t.landing.heading })).toBeVisible();
+
+    await signIn(page);
+    await page
+      .getByRole('navigation', { name: t.admin.nav.label })
+      .getByRole('link', {
+        name: t.common.backHome,
+      })
+      .click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('heading', { name: t.landing.heading })).toBeVisible();
   });
 
   test('section links jump within the console @smoke', async ({ page }, testInfo) => {

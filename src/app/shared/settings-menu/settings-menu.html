@@ -61,4 +61,13 @@
       </span>
     </button>
   </div>
+
+  @if (homeLink()) {
+    <div class="row">
+      <a class="btn" routerLink="/">
+        <pb-icon name="house" />
+        {{ 'common.backHome' | transloco }}
+      </a>
+    </div>
+  }
 </div>

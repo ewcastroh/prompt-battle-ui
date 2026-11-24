@@ -1,5 +1,6 @@
 import { Component, ElementRef, computed, inject, input, signal, viewChild } from '@angular/core';
 import { FormField, form, required, submit } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ErrorMessage, errorMessage } from '../../../core/api/error-messages';
 import { Icon } from '../../../shared/icon/icon';
@@ -27,7 +28,7 @@ export function loginErrorMessage(error: LoginError, routeCityName: string): Err
  */
 @Component({
   selector: 'pb-admin-login',
-  imports: [FormField, Icon, InlineMessage, TranslocoPipe],
+  imports: [FormField, Icon, InlineMessage, RouterLink, TranslocoPipe],
   template: `
     @if (reasonKey(); as key) {
       <pb-inline-message [tone]="reasonTone()">{{ key | transloco }}</pb-inline-message>
@@ -81,6 +82,10 @@ export function loginErrorMessage(error: LoginError, routeCityName: string): Err
         </button>
       </form>
     </section>
+    <a class="btn home" routerLink="/">
+      <pb-icon name="house" />
+      {{ 'common.backHome' | transloco }}
+    </a>
   `,
   styles: `
     @layer components {
@@ -92,6 +97,10 @@ export function loginErrorMessage(error: LoginError, routeCityName: string): Err
 
       h2 {
         margin: 0;
+      }
+
+      .home {
+        justify-self: start;
       }
 
       .token-row {

@@ -1,4 +1,10 @@
-<pb-app-header variant="stage" [title]="heading()" [cityName]="cityName()" titleId="stage-title" />
+<pb-app-header
+  variant="stage"
+  homeLink
+  [title]="heading()"
+  [cityName]="cityName()"
+  titleId="stage-title"
+/>
 <main class="stage" [attr.data-scene]="stage.scene()">
   <p class="statusbar">
     <span class="brand">{{ 'app.brand' | transloco }}</span>

@@ -37,6 +37,23 @@ function shownRank(page: Page) {
 }
 
 test.describe('stage', () => {
+  test('the settings popover leads back to the cities page; nothing extra on the projector @smoke @desktop', async ({
+    page,
+  }, testInfo) => {
+    const t = copyFor(testInfo);
+    await page.goto('/stage/mde?scene=lobby');
+    await expect(page.getByRole('heading', { level: 2, name: t.stage.lobby.title })).toBeVisible();
+    // Closed popover: no visible link on the stage.
+    await expect(page.getByRole('link', { name: t.common.backHome })).toBeHidden();
+
+    await page.getByRole('button', { name: t.settings.open }).click();
+    await expect(page.getByRole('link', { name: t.common.backHome })).toBeVisible();
+    await expectNoAxeViolations(page);
+    await page.getByRole('link', { name: t.common.backHome }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('heading', { name: t.landing.heading })).toBeVisible();
+  });
+
   test('lobby: city, QR, short URL, counter and nicknames @smoke @desktop', async ({
     page,
     baseURL,

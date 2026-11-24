@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { LanguageService } from '../../core/i18n/language.service';
 import { translocoTesting } from '../../../testing/transloco-testing';
 import { SettingsMenu } from './settings-menu';
@@ -7,14 +8,20 @@ describe('SettingsMenu', () => {
   beforeEach(async () => {
     localStorage.clear();
     window.matchMedia ??= (() => null) as unknown as typeof window.matchMedia;
-    TestBed.configureTestingModule({ imports: [translocoTesting()] });
+    TestBed.configureTestingModule({
+      imports: [translocoTesting()],
+      providers: [provideRouter([])],
+    });
     await TestBed.inject(LanguageService).init();
   });
 
   afterEach(() => localStorage.clear());
 
-  async function render() {
+  async function render(homeLink?: boolean) {
     const fixture = TestBed.createComponent(SettingsMenu);
+    if (homeLink !== undefined) {
+      fixture.componentRef.setInput('homeLink', homeLink);
+    }
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
@@ -46,5 +53,19 @@ describe('SettingsMenu', () => {
     const toggle = element.querySelector<HTMLButtonElement>('button.theme-toggle')!;
     expect(toggle.querySelector('.theme-if-light')?.textContent).toContain('Cambiar a tema oscuro');
     expect(toggle.querySelector('.theme-if-dark')?.textContent).toContain('Cambiar a tema claro');
+  });
+
+  it('has no link to the cities by default (player screens)', async () => {
+    const element = await render();
+    expect(element.querySelector('[popover] a')).toBeNull();
+  });
+
+  it('with homeLink, ends the panel with a link to the cities page', async () => {
+    const element = await render(true);
+    const link = element.querySelector<HTMLAnchorElement>('[popover] a')!;
+    expect(link.getAttribute('href')).toBe('/');
+    expect(link.textContent).toContain('Ver las ciudades');
+    expect(link.querySelector('pb-icon')).not.toBeNull();
+    expect(element.querySelector('[popover]')!.lastElementChild!.contains(link)).toBe(true);
   });
 });
