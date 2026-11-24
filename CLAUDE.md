@@ -41,6 +41,7 @@ Fake dev tools (`npm run start:fake` only): `/play/mde?dev` shows a "Demo data /
 - **No runtime CDN calls.** Fonts are in `public/fonts` (declared in `index.html` so URLs follow the base href); icons are copied Lucide SVGs in `shared/icon` (see `THIRD_PARTY_NOTICES.md`); canvas-confetti is an npm dependency, bundled into a lazy chunk.
 - Run the `modern-web-guidance` skill before writing HTML/CSS/client JS for a pattern. Mobile first (360×800), tap targets ≥ 44 px, WCAG 2.2 AA in both themes.
 - Never commit secrets. Commits are made as the owner; no AI attribution trailers.
+- Branches: one branch per change, never work on `main` (D-028). Check `git branch --show-current` before editing; if it is `main`, create `<phase-or-type>/<short-topic>` first. `main` only changes through a pull request that the owner merges.
 
 ## Angular conventions
 
